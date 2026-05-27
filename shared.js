@@ -33,22 +33,15 @@
 /* ── MOBILE DRAWER ─────────────────────────────────────────── */
 (function () {
   const menuBtn    = document.getElementById('menu-btn');
+  const overlay    = document.getElementById('mobile-overlay');
   const drawer     = document.getElementById('mobile-drawer');
   const closeBtn   = document.getElementById('drawer-close-btn');
   const aboutLink  = document.getElementById('drawer-about-link');
 
-  if (!menuBtn || !drawer) return;
-
-  let overlay = null;
+  if (!menuBtn || !overlay || !drawer) return;
 
   function openDrawer() {
-    if (!overlay) {
-      overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:149;';
-      overlay.addEventListener('click', closeDrawer);
-      document.body.appendChild(overlay);
-    }
-    drawer.classList.add('open');
+    overlay.classList.add('open');
     menuBtn.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
 
@@ -57,24 +50,21 @@
   }
 
   function closeDrawer() {
-    drawer.classList.remove('open');
+    overlay.classList.remove('open');
     menuBtn.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
-
-    if (overlay) {
-      overlay.remove();
-      overlay = null;
-    }
-
     menuBtn.focus();
   }
 
   menuBtn.addEventListener('click', openDrawer);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeDrawer();
+  });
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
   if (aboutLink) aboutLink.addEventListener('click', closeDrawer);
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && drawer.classList.contains('open')) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
       closeDrawer();
     }
   });
