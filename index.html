@@ -5,42 +5,357 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lumber Bros. — Making more with the rarest material in the galaxy.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@600&display=swap">
   <link rel="stylesheet" href="site.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ── Header scroll state ─────────────────────────────── */
+    #site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--lb-paper);
+      border-bottom: 1px solid transparent;
+      will-change: background-color, box-shadow;
+      transition: background 140ms cubic-bezier(.2,.8,.2,1),
+                  border-color 140ms cubic-bezier(.2,.8,.2,1),
+                  box-shadow 140ms cubic-bezier(.2,.8,.2,1);
+    }
+    #site-header.scrolled {
+      background: rgba(246,244,239,0.92);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom-color: var(--lb-paper-deep);
+      box-shadow: 0 6px 18px -16px rgba(20,18,14,.35);
+    }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px var(--gutter); gap: 24px;
+      transition: padding 140ms cubic-bezier(.2,.8,.2,1);
+    }
+    #site-header.scrolled .header-inner { padding-top: 6px; padding-bottom: 6px; }
+    .header-logo {
+      display: inline-flex; transform-origin: left center;
+      transition: transform 140ms cubic-bezier(.2,.8,.2,1); will-change: transform;
+    }
+    #site-header.scrolled .header-logo { transform: scale(0.88); }
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+    /* ── Mobile drawer ───────────────────────────────────── */
+    #mobile-overlay {
+      position: fixed; inset: 0; z-index: 60;
+      background: rgba(20,18,14,.45);
+      opacity: 0; pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+    #mobile-overlay.open { opacity: 1; pointer-events: auto; }
+    #mobile-panel {
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: min(86vw, 360px);
+      background: var(--lb-paper);
+      box-shadow: -20px 0 60px rgba(0,0,0,.18);
+      display: flex; flex-direction: column;
+      padding: 22px 24px 28px; gap: 8px;
+      transform: translateX(100%);
+      transition: transform 260ms cubic-bezier(.2,.7,.2,1);
+    }
+    #mobile-overlay.open #mobile-panel { transform: translateX(0); }
+  </style>
 </head>
 <body data-screen-label="Homepage">
-  <div id="root"></div>
 
-  <script type="text/babel" src="components/Shared.jsx"></script>
-  <script type="text/babel" src="components/Homepage.jsx"></script>
-  <script type="text/babel">
-    const App = () => (
-      <div>
-        <SiteHeader active="home" />
-        <main>
-          <HomeHero />
-          <HomeServices />
-          <HomeFinalCTA />
-        </main>
-        <SiteFooter />
+  <!-- ════════════════ HEADER ════════════════ -->
+  <header id="site-header">
+    <div class="header-inner container">
+      <a href="index.html" class="header-logo">
+        <img src="assets/logo.svg" alt="Lumber Bros." width="120" style="height:auto;display:block;">
+      </a>
+
+      <nav class="nav-desktop" style="gap:30px;">
+        <a href="tree-removal.html" style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-ink);text-decoration:none;">Tree Service</a>
+      </nav>
+
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a href="tel:2524950720" class="btn btn-cream header-phone-desktop">
+          <i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+          (252) 495-0720
+        </a>
+        <a href="tel:2524950720" aria-label="Call (252) 495-0720" class="header-phone-mobile"
+           style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:var(--lb-bone);border:1px solid rgba(0,0,0,.08);border-radius:999px;color:var(--lb-ink);text-decoration:none;">
+          <i data-lucide="phone" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+        <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary header-cta-primary">
+          Get a free quote
+          <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+        <button type="button" aria-label="Open menu" aria-expanded="false" class="nav-mobile-toggle"
+                style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(0,0,0,.12);border-radius:8px;color:var(--lb-ink);cursor:pointer;padding:0;">
+          <i data-lucide="menu" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;"></i>
+        </button>
       </div>
-    );
+    </div>
+  </header>
 
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<App />);
+  <!-- ════════════════ MOBILE DRAWER ════════════════ -->
+  <div id="mobile-overlay" aria-hidden="true">
+    <div id="mobile-panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <img src="assets/logo.svg" alt="Lumber Bros." width="130" style="height:auto;display:block;">
+        <button id="mobile-close" type="button" aria-label="Close menu"
+                style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--lb-ink);cursor:pointer;padding:0;">
+          <i data-lucide="x" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;"></i>
+        </button>
+      </div>
+      <nav style="display:flex;flex-direction:column;margin-top:18px;border-top:1px solid rgba(0,0,0,.08);">
+        <a href="tree-removal.html"
+           style="font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.01em;color:var(--lb-ink);text-decoration:none;padding:18px 0;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between;">
+          Tree Service
+          <i data-lucide="arrow-up-right" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+      </nav>
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;">
+        <a href="tel:2524950720" class="btn btn-cream">
+          <i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+          (252) 495-0720
+        </a>
+        <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary">
+          Get a free quote
+          <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+        <p style="margin-top:6px;font-family:var(--font-sans);font-size:13px;color:var(--fg-muted);line-height:1.5;">Mon–Sat, 7:00a–6:00p</p>
+      </div>
+    </div>
+  </div>
 
-    // refresh lucide after react renders
-    requestAnimationFrame(() => {
-      if (window.lucide) lucide.createIcons();
-      // run again after a tick to catch any delayed renders
-      setTimeout(() => window.lucide && lucide.createIcons(), 200);
-    });
-  </script>
+  <!-- ════════════════ MAIN ════════════════ -->
+  <main>
+
+    <!-- HomeHero -->
+    <section style="padding-top:40px;padding-bottom:16px;">
+      <div class="container">
+        <h1 class="display" style="font-size:clamp(56px,8.2vw,124px);line-height:1.1;color:var(--lb-navy);margin:0 0 40px;max-width:14ch;">
+          Closing the loop on <em style="font-style:normal;color:var(--lb-rust);">urban wood</em>
+        </h1>
+        <div style="padding-bottom:56px;max-width:720px;">
+          <p style="font-family:var(--font-sans);font-size:19px;line-height:1.55;color:var(--fg-soft);margin:0;">
+            36 million urban trees come down every year. Over 80% get wasted in the chipper or landfill.
+            <strong style="color:var(--lb-ink);font-weight:700;"> We're changing that — starting in Washington, North Carolina.</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HomeServices -->
+    <section class="section bg-paper-deep" id="services">
+      <div class="container">
+
+        <div style="margin-bottom:72px;display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid rgba(20,18,14,.14);">
+          <h2 class="section-eyebrow">Our Capabilities</h2>
+        </div>
+
+        <!-- 01 Precision tree service -->
+        <article class="row-2-split" style="padding-bottom:96px;">
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;">
+              <span style="font-family:var(--font-sans);font-size:14px;font-weight:700;letter-spacing:.14em;color:var(--lb-rust);text-transform:uppercase;line-height:1;padding-top:4px;">01</span>
+              <h3 class="display" style="font-size:clamp(28px,5.4vw,56px);color:var(--lb-navy);margin:0;line-height:1.0;">Precision tree service</h3>
+            </div>
+            <p style="font-family:var(--font-sans);font-size:18px;color:var(--fg-soft);line-height:1.55;margin:0;max-width:44ch;">
+              Tree and limb removal across Beaufort, Pitt, and Washington counties. We specialize in tight-space removals using time-tested rigging techniques and modern ingenuity.
+            </p>
+            <ul class="trust-signals trust-signals-check">
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"></polyline></svg></span><span class="trust-signal-label">Fully Insured</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"></polyline></svg></span><span class="trust-signal-label">Locally Owned &amp; Operated</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"></polyline></svg></span><span class="trust-signal-label">Fixed Quotes</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"></polyline></svg></span><span class="trust-signal-label">ISA Professional Member</span></li>
+            </ul>
+            <div style="margin-top:6px;">
+              <a href="tree-removal.html" class="btn btn-text">Learn more <i data-lucide="arrow-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i></a>
+            </div>
+          </div>
+          <!-- Carousel 1 -->
+          <div data-carousel role="region" aria-roledescription="carousel" aria-label="Tree service photos" tabindex="0" style="outline:none;">
+            <div data-carousel-viewport style="overflow:hidden;border-radius:10px;touch-action:pan-y;cursor:grab;user-select:none;">
+              <div data-carousel-track style="display:flex;width:400%;transition:transform 380ms cubic-bezier(.2,.7,.2,1);">
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="1 of 4">
+                  <div class="photo photo-forest photo-service" style="background-image:url(assets/photos/arborist-climbing-tall-pine-tree-1.webp);background-size:cover;background-position:center;"><span class="tag">Alex making a climb • Washington, NC</span></div>
+                </div>
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="2 of 4" aria-hidden="true">
+                  <div class="photo photo-forest photo-service" style="background-image:url(assets/photos/chainsaw-operator-storm-debris-cleanup.webp);background-size:cover;background-position:center;"><span class="tag">Storm cleanup • Greenville, NC</span></div>
+                </div>
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="3 of 4" aria-hidden="true">
+                  <div class="photo photo-forest photo-service" style="background-image:url(assets/photos/person-climbing-trees-zip-line.webp);background-size:cover;background-position:center;"><span class="tag">Alex rigging a limb • Greenville, NC</span></div>
+                </div>
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="4 of 4" aria-hidden="true">
+                  <div class="photo photo-forest photo-service" style="background-image:url(assets/photos/man-pulling-red-rope-trees.webp);background-size:cover;background-position:center;"><span class="tag">Setting up a 4:1 • Washington, NC</span></div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:16px;flex-wrap:wrap;">
+              <div data-carousel-dots style="display:flex;gap:10px;">
+                <button data-dot type="button" aria-label="Go to photo 1" aria-current="true"  style="width:28px;height:10px;border-radius:999px;border:none;cursor:pointer;background:var(--lb-navy);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+                <button data-dot type="button" aria-label="Go to photo 2" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+                <button data-dot type="button" aria-label="Go to photo 3" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+                <button data-dot type="button" aria-label="Go to photo 4" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <button data-carousel-prev type="button" aria-label="Previous photo" style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><i data-lucide="arrow-left" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i></button>
+                <button data-carousel-next type="button" aria-label="Next photo"     style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><i data-lucide="arrow-right" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i></button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- 02 Milling (reversed) -->
+        <article class="row-2-split-rev" style="padding-bottom:96px;">
+          <div style="display:flex;flex-direction:column;gap:20px;">
+            <div style="display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;">
+              <span style="font-family:var(--font-sans);font-size:14px;font-weight:700;letter-spacing:.14em;color:var(--lb-rust);text-transform:uppercase;line-height:1;padding-top:4px;">02</span>
+              <h3 class="display" style="font-size:clamp(28px,5.4vw,56px);color:var(--lb-navy);margin:0;line-height:1.0;">Milling</h3>
+            </div>
+            <p style="font-family:var(--font-sans);font-size:18px;color:var(--fg-soft);line-height:1.55;margin:0;max-width:44ch;">
+              We mill to order, not for inventory. Bring us your log, your spec, or your project, and we'll cut what you actually need.
+            </p>
+            <ul class="trust-signals">
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Rough Cut Lumber</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Trailer Decking</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Structural Beams</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Slabs</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Off-Cut Fencing</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Posts</span></li>
+            </ul>
+          </div>
+          <!-- Carousel 2 -->
+          <div data-carousel role="region" aria-roledescription="carousel" aria-label="Milling photos" tabindex="0" style="outline:none;">
+            <div data-carousel-viewport style="overflow:hidden;border-radius:10px;touch-action:pan-y;cursor:grab;user-select:none;">
+              <div data-carousel-track style="display:flex;width:400%;transition:transform 380ms cubic-bezier(.2,.7,.2,1);">
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="1 of 4">
+                  <div class="photo photo-amber photo-service" style="background-image:url(assets/photos/kohler-bandsaw-mill-lumber-slab.webp);background-size:cover;background-position:center;"></div>
+                </div>
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="2 of 4" aria-hidden="true">
+                  <div class="photo photo-amber photo-service" style="background-image:url(assets/photos/lumber-stacks-farm-shed.webp);background-size:cover;background-position:center;"></div>
+                </div>
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="3 of 4" aria-hidden="true">
+                  <div class="photo photo-amber photo-service" style="background-image:url(assets/photos/fresh-sawn-lumber-flatbed-trailer.webp);background-size:cover;background-position:center;"></div>
+                </div>
+                <div data-slide style="width:25%;flex:0 0 auto;" role="group" aria-roledescription="slide" aria-label="4 of 4" aria-hidden="true">
+                  <div class="photo photo-amber photo-service" style="background-image:url(assets/photos/stacked-lumber-boards-deck-night-1.webp);background-size:cover;background-position:center;"></div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:20px;gap:16px;flex-wrap:wrap;">
+              <div data-carousel-dots style="display:flex;gap:10px;">
+                <button data-dot type="button" aria-label="Go to photo 1" aria-current="true"  style="width:28px;height:10px;border-radius:999px;border:none;cursor:pointer;background:var(--lb-navy);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+                <button data-dot type="button" aria-label="Go to photo 2" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+                <button data-dot type="button" aria-label="Go to photo 3" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+                <button data-dot type="button" aria-label="Go to photo 4" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              </div>
+              <div style="display:flex;gap:10px;">
+                <button data-carousel-prev type="button" aria-label="Previous photo" style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><i data-lucide="arrow-left" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i></button>
+                <button data-carousel-next type="button" aria-label="Next photo"     style="width:44px;height:44px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;"><i data-lucide="arrow-right" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i></button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Secondary services -->
+        <div style="border-top:1px solid rgba(20,18,14,.10);padding-top:48px;padding-bottom:24px;margin-top:8px;">
+          <p style="font-family:var(--font-sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--fg-muted);margin:0 0 36px;">Also available</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:40px 64px;">
+            <article style="display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;align-items:baseline;gap:14px;">
+                <span style="font-family:var(--font-sans);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--lb-rust);text-transform:uppercase;opacity:.75;">03</span>
+                <h3 class="display" style="font-size:clamp(22px,2.8vw,32px);color:var(--lb-navy);margin:0;line-height:1.05;">Timber frame builds</h3>
+              </div>
+              <p style="font-family:var(--font-sans);font-size:15px;color:var(--fg-soft);line-height:1.55;margin:0;">We design and build custom structures to spec using timber-framing techniques and our own locally sourced lumber.</p>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;">
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Pavilions</li>
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Barns</li>
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Outbuildings</li>
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Decks</li>
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Ramps</li>
+              </ul>
+            </article>
+            <article style="display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;align-items:baseline;gap:14px;">
+                <span style="font-family:var(--font-sans);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--lb-rust);text-transform:uppercase;opacity:.75;">04</span>
+                <h3 class="display" style="font-size:clamp(22px,2.8vw,32px);color:var(--lb-navy);margin:0;line-height:1.05;">Wood products</h3>
+              </div>
+              <p style="font-family:var(--font-sans);font-size:15px;color:var(--fg-soft);line-height:1.55;margin:0;">When the saw stops running, nothing hits the ground wasted. We craft small-batch wood goods from everything that's left over.</p>
+              <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:4px;">
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Mushroom Grow Bags</li>
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Compost Sawdust</li>
+                <li style="font-family:var(--font-sans);font-size:14px;color:var(--lb-ink-soft);display:flex;align-items:center;gap:8px;"><span style="width:4px;height:4px;border-radius:50%;background:var(--lb-rust);opacity:.6;flex-shrink:0;display:inline-block;"></span>Turning Blanks</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HomeFinalCTA -->
+    <section class="section bg-navy" style="color:var(--lb-bone);">
+      <div class="container" style="text-align:center;">
+        <h2 class="display" style="font-size:clamp(48px,6.4vw,104px);color:var(--lb-bone);margin:0 auto 24px;line-height:.95;max-width:14ch;letter-spacing:-.015em;">
+          Need a tree or limb gone?
+        </h2>
+        <p style="font-family:var(--font-sans);font-size:19px;color:rgba(251,247,238,.8);margin:0 auto;max-width:44ch;line-height:1.5;">
+          Don't let that wood go to waste. Complete a short form and we'll get back to you within 24 hours, guaranteed.
+        </p>
+        <div style="margin-top:40px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
+          <a href="https://forms.example.com/lumberbros-quote" class="btn btn-rust btn-lg">
+            Get started <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+          </a>
+          <a href="tel:2524950720" class="btn btn-ghost-light btn-lg">
+            <i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i> (252) 495-0720
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer class="bg-black" style="color:var(--lb-bone);padding-top:96px;padding-bottom:48px;">
+    <div class="container row-4" style="gap:48px;">
+      <div>
+        <img src="assets/logo.svg" alt="Lumber Bros." width="220" style="height:auto;display:block;filter:brightness(0) invert(1);max-width:min(220px,70vw);">
+        <p style="font-family:var(--font-sans);font-size:15px;color:rgba(251,247,238,.7);margin-top:28px;max-width:340px;line-height:1.55;">
+          Family-run tree service, sawmill, and custom-build shop. Serving Eastern North Carolina since 2024.
+        </p>
+      </div>
+      <div>
+        <div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-sawdust);">Services</div>
+        <ul style="list-style:none;padding:0;margin:18px 0 0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Precision Tree Removal</a></li>
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Milling</a></li>
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Custom Builds</a></li>
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Wood Products</a></li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-sawdust);">Service areas</div>
+        <ul style="list-style:disc;padding:0 0 0 20px;margin:18px 0 0;display:flex;flex-direction:column;gap:10px;">
+          <li style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;">Beaufort County</li>
+          <li style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;">Pitt Co.</li>
+          <li style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;">Washington County</li>
+        </ul>
+        <p style="margin-top:14px;color:rgba(251,247,238,.6);font-family:var(--font-sans);font-size:13px;line-height:1.5;">Surrounding areas on a case-by-case basis.</p>
+      </div>
+      <div>
+        <div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-sawdust);">Contact us</div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:14px;">
+          <a href="tel:2524950720" style="font-family:var(--font-display);font-size:28px;color:var(--lb-bone);font-weight:700;letter-spacing:-.01em;text-decoration:none;line-height:1.1;">(252) 495-0720</a>
+          <a href="mailto:hello@lumberbros.co" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">hello@lumberbros.co</a>
+          <p style="color:rgba(251,247,238,.7);font-family:var(--font-sans);font-size:14px;line-height:1.5;margin:0;">Mon–Sat, 7:00a–6:00p</p>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin-top:80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--font-sans);font-size:13px;color:rgba(251,247,238,.5);">
+      <span>© 2025 Lumber Bros. LLC · Washington, NC</span>
+      <span>ISA Professional Member CSID: 374451</span>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="site.js"></script>
 </body>
 </html>

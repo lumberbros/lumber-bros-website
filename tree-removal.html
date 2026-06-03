@@ -5,47 +5,584 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tree Removal in Beaufort, Pitt &amp; Washington County · Lumber Bros.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@600&display=swap">
   <link rel="stylesheet" href="site.css">
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ── Header ──────────────────────────────────────────────── */
+    #site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--lb-paper);
+      border-bottom: 1px solid transparent;
+      will-change: background-color, box-shadow;
+      transition: background 140ms cubic-bezier(.2,.8,.2,1),
+                  border-color 140ms cubic-bezier(.2,.8,.2,1),
+                  box-shadow 140ms cubic-bezier(.2,.8,.2,1);
+    }
+    #site-header.scrolled {
+      background: rgba(246,244,239,0.92);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      border-bottom-color: var(--lb-paper-deep);
+      box-shadow: 0 6px 18px -16px rgba(20,18,14,.35);
+    }
+    .header-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px var(--gutter); gap: 24px;
+      transition: padding 140ms cubic-bezier(.2,.8,.2,1);
+    }
+    #site-header.scrolled .header-inner { padding-top: 6px; padding-bottom: 6px; }
+    .header-logo { display: inline-flex; transform-origin: left center; transition: transform 140ms cubic-bezier(.2,.8,.2,1); will-change: transform; }
+    #site-header.scrolled .header-logo { transform: scale(0.88); }
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+    /* ── Mobile drawer ───────────────────────────────────────── */
+    #mobile-overlay {
+      position: fixed; inset: 0; z-index: 60;
+      background: rgba(20,18,14,.45);
+      opacity: 0; pointer-events: none;
+      transition: opacity 220ms ease;
+    }
+    #mobile-overlay.open { opacity: 1; pointer-events: auto; }
+    #mobile-panel {
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: min(86vw,360px); background: var(--lb-paper);
+      box-shadow: -20px 0 60px rgba(0,0,0,.18);
+      display: flex; flex-direction: column;
+      padding: 22px 24px 28px; gap: 8px;
+      transform: translateX(100%);
+      transition: transform 260ms cubic-bezier(.2,.7,.2,1);
+    }
+    #mobile-overlay.open #mobile-panel { transform: translateX(0); }
+
+    /* ── FAQ accordion ───────────────────────────────────────── */
+    .faq-body { display: none; padding: 0 0 24px; font-family: var(--font-sans); font-size: 16px; color: var(--fg-soft); line-height: 1.6; max-width: 70ch; }
+    .faq-body a { color: var(--lb-navy); font-weight: 700; }
+    .faq-item.open .faq-body { display: block; }
+    .faq-item { background: transparent; padding: 4px 24px; border-radius: 8px; transition: background 200ms ease; }
+    .faq-item.open { background: var(--lb-bone); }
+    .faq-icon { transition: transform 220ms ease; display: inline-block; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-btn { all: unset; width: 100%; cursor: pointer; padding: 22px 0; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+
+    /* ── Photo lightbox ──────────────────────────────────────── */
+    #photo-lightbox {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(14,12,8,.88);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px 16px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 180ms cubic-bezier(.2,.7,.2,1);
+    }
+    #photo-lightbox.open { opacity: 1; pointer-events: auto; }
+    .lightbox-inner {
+      position: relative; max-width: min(92vw,1200px);
+      max-height: calc(100dvh - 80px);
+      display: flex; flex-direction: column;
+    }
+    #lightbox-img { display: block; max-width: 100%; max-height: calc(100dvh - 112px); width: auto; height: auto; object-fit: contain; border-radius: 8px; box-shadow: 0 32px 80px rgba(0,0,0,.6); }
+    #lightbox-caption { margin-top: 12px; font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: rgba(255,255,255,.65); letter-spacing: .02em; text-align: center; }
+    #lightbox-close { position: fixed; top: 16px; right: 16px; z-index: 201; width: 44px; height: 44px; border-radius: 999px; background: rgba(14,12,8,.72); border: 1px solid rgba(255,255,255,.18); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; backdrop-filter: blur(8px); }
+    #lightbox-close:hover { background: rgba(40,35,25,.92); }
+
+    /* ── Recent work expand hint ─────────────────────────────── */
+    @media (hover: hover) and (pointer: fine) {
+      .tr-recent-expand-hint { opacity: 0; }
+      .tr-recent-photo-btn:hover .tr-recent-expand-hint,
+      .tr-recent-photo-btn:focus-visible .tr-recent-expand-hint { opacity: 1; }
+    }
+    @media (hover: none) { .tr-recent-expand-hint { opacity: 1; } }
+  </style>
 </head>
 <body data-screen-label="Tree Removal LP">
-  <div id="root"></div>
 
-  <script type="text/babel" src="components/Shared.jsx"></script>
-  <script type="text/babel" src="components/TreeRemoval.jsx"></script>
-  <script type="text/babel">
-    const App = () => (
-      <div>
-        <SiteHeader active="tree" />
-        <main>
-          <TRHero />
-          <TRTrustBar />
-          <TRReviews />
-          <TRHowItWorks />
-          <TRSaveCallout />
-          <TRRecentWork />
-          <TRDifferent />
-          <TRServiceAreas />
-          <TRFaq />
-          <TRFinalCTA />
-        </main>
-        <SiteFooter />
+  <!-- ════════════════ HEADER ════════════════ -->
+  <header id="site-header">
+    <div class="header-inner container">
+      <a href="index.html" class="header-logo">
+        <img src="assets/logo.svg" alt="Lumber Bros." width="120" style="height:auto;display:block;">
+      </a>
+      <nav class="nav-desktop" style="gap:30px;">
+        <a href="tree-removal.html" style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-rust);text-decoration:none;">Tree Service</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <a href="tel:2524950720" class="btn btn-cream header-phone-desktop">
+          <i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i> (252) 495-0720
+        </a>
+        <a href="tel:2524950720" aria-label="Call (252) 495-0720" class="header-phone-mobile"
+           style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:var(--lb-bone);border:1px solid rgba(0,0,0,.08);border-radius:999px;color:var(--lb-ink);text-decoration:none;">
+          <i data-lucide="phone" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+        <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary header-cta-primary">
+          Get a free quote <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+        <button type="button" aria-label="Open menu" aria-expanded="false" class="nav-mobile-toggle"
+                style="width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:1px solid rgba(0,0,0,.12);border-radius:8px;color:var(--lb-ink);cursor:pointer;padding:0;">
+          <i data-lucide="menu" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;"></i>
+        </button>
       </div>
-    );
+    </div>
+  </header>
 
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    root.render(<App />);
+  <!-- ════════════════ MOBILE DRAWER ════════════════ -->
+  <div id="mobile-overlay" aria-hidden="true">
+    <div id="mobile-panel" role="dialog" aria-modal="true" aria-label="Site menu">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <img src="assets/logo.svg" alt="Lumber Bros." width="130" style="height:auto;display:block;">
+        <button id="mobile-close" type="button" aria-label="Close menu"
+                style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;background:transparent;border:none;color:var(--lb-ink);cursor:pointer;padding:0;">
+          <i data-lucide="x" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;"></i>
+        </button>
+      </div>
+      <nav style="display:flex;flex-direction:column;margin-top:18px;border-top:1px solid rgba(0,0,0,.08);">
+        <a href="tree-removal.html"
+           style="font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-.01em;color:var(--lb-rust);text-decoration:none;padding:18px 0;border-bottom:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between;">
+          Tree Service <i data-lucide="arrow-up-right" style="width:18px;height:18px;display:inline-flex;flex:0 0 auto;"></i>
+        </a>
+      </nav>
+      <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px;">
+        <a href="tel:2524950720" class="btn btn-cream"><i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i> (252) 495-0720</a>
+        <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary">Get a free quote <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i></a>
+        <p style="margin-top:6px;font-family:var(--font-sans);font-size:13px;color:var(--fg-muted);line-height:1.5;">Mon–Sat, 7:00a–6:00p</p>
+      </div>
+    </div>
+  </div>
 
-    requestAnimationFrame(() => {
-      if (window.lucide) lucide.createIcons();
-      setTimeout(() => window.lucide && lucide.createIcons(), 200);
-    });
-  </script>
+  <!-- ════════════════ MAIN ════════════════ -->
+  <main>
+
+    <!-- TRHero -->
+    <section class="tr-hero-v2" style="padding-bottom:28px;">
+      <div class="container">
+        <div class="tr-hero-v2-grid">
+          <div class="tr-hero-v2-text">
+            <div class="tr-hero-v2-headline" style="gap:28px;">
+              <h1 class="tr-hero-v2-eyebrow" style="color:var(--lb-ink);">
+                Tree Service in Washington, Beaufort, and Pitt County NC
+              </h1>
+              <h2 class="display tr-hero-v2-title" style="color:var(--lb-navy);margin:0;">
+                <em style="font-style:normal;color:var(--lb-navy);white-space:nowrap;">Tight-space</em> <span style="white-space:nowrap;">tree removal</span>
+              </h2>
+            </div>
+            <p class="tr-hero-v2-sub">
+              We use time-tested rigging techniques and minimal equipment to remove trees and limbs from hazardous or limited-access locations:
+            </p>
+            <ul class="trust-signals trust-signals-cols">
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Small yards &amp; narrow gates</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Trees over or against structures</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Historic homes with immaculate landscaping</span></li>
+              <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Anywhere heavy equipment can't reach</span></li>
+            </ul>
+            <div class="tr-hero-v2-cta">
+              <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary btn-lg">
+                Get a free quote <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+              </a>
+              <a href="tel:2524950720" class="btn btn-cream btn-lg">
+                <i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i> (252) 495-0720
+              </a>
+            </div>
+          </div>
+          <div class="tr-hero-v2-photo-wrap tr-hero-v2-photo" style="overflow:hidden;">
+            <video autoplay="" loop="" muted="" playsinline=""
+                   style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;transform:scale(1.05);">
+              <source src="assets/lumber_bros_loop.webm" type="video/webm">
+              <source src="assets/lumber_bros_loop.mp4"  type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRTrustBar -->
+    <section class="tr-trust-bar" aria-label="Credentials">
+      <div class="container">
+        <div class="tr-trust-bar-row">
+          <div class="tr-trust-bar-cell">
+            <i data-lucide="shield-check" style="width:32px;height:32px;display:inline-flex;flex:0 0 auto;color:var(--lb-rust);margin:0 8px;"></i>
+            <div class="tr-trust-bar-label">Fully Insured</div>
+          </div>
+          <div class="tr-trust-bar-cell">
+            <i data-lucide="check" style="width:32px;height:32px;display:inline-flex;flex:0 0 auto;color:var(--lb-rust);margin:0 8px;"></i>
+            <div class="tr-trust-bar-label">Locally Owned &amp; Operated</div>
+          </div>
+          <div class="tr-trust-bar-cell">
+            <img src="assets/isa_logo.png" alt="International Society of Arboriculture member badge" class="tr-trust-bar-img" style="flex:0 0 auto;">
+            <div class="tr-trust-bar-label">ISA Professional Member<div class="tr-trust-bar-sublabel">CSID: 374451</div></div>
+          </div>
+          <div class="tr-trust-bar-cell">
+            <img src="assets/nc_forestry_association_logo.png" alt="North Carolina Forestry Association logo" class="tr-trust-bar-img" style="flex:0 0 auto;">
+            <div class="tr-trust-bar-label">NCFA Member</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRReviews -->
+    <section class="section-tight">
+      <div class="container">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;gap:24px;flex-wrap:wrap;">
+          <h2 class="display" style="font-size:clamp(40px,4.6vw,60px);color:var(--lb-navy);margin:0;max-width:14ch;">Proof's in the puddin'</h2>
+          <a href="https://share.google/csb9JwBUlxPuIa7q1" target="_blank" rel="noopener noreferrer"
+             style="font-family:var(--font-sans);font-size:15px;font-weight:600;color:var(--lb-navy);">Read our Google reviews →</a>
+        </div>
+
+        <div data-carousel role="region" aria-roledescription="carousel" aria-label="Customer reviews" tabindex="0" style="outline:none;">
+          <div data-carousel-viewport style="overflow:hidden;border-radius:10px;touch-action:pan-y;cursor:grab;user-select:none;">
+            <div data-carousel-track style="display:flex;width:300%;transition:transform 380ms cubic-bezier(.2,.7,.2,1);">
+
+              <div data-slide style="width:33.333%;flex:0 0 auto;padding:0 2px;" role="group" aria-roledescription="slide" aria-label="1 of 3">
+                <div style="max-width:880px;margin:0 auto;">
+                  <div class="card" style="background:var(--lb-bone);padding:32px 34px;border-radius:10px;display:flex;flex-direction:column;gap:18px;">
+                    <div style="color:var(--lb-sawdust);font-size:16px;letter-spacing:3px;">★★★★★</div>
+                    <blockquote class="italic-display" style="font-size:24px;line-height:1.35;margin:0;color:var(--lb-ink);">"Alex responded to our voicemail super fast and came right out for a quote. Our neighbors were super impressed with how tidy their backyard was after the work was complete."</blockquote>
+                    <div style="margin-top:auto;font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--fg-muted);">— M. Cordes <span style="margin-left:8px;opacity:.7;">· Washington Co.</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div data-slide style="width:33.333%;flex:0 0 auto;padding:0 2px;" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true">
+                <div style="max-width:880px;margin:0 auto;">
+                  <div class="card" style="background:var(--lb-bone);padding:32px 34px;border-radius:10px;display:flex;flex-direction:column;gap:18px;">
+                    <div style="color:var(--lb-sawdust);font-size:16px;letter-spacing:3px;">★★★★★</div>
+                    <blockquote class="italic-display" style="font-size:24px;line-height:1.35;margin:0;color:var(--lb-ink);">"Very nice and professional. Would recommend to anyone."</blockquote>
+                    <div style="margin-top:auto;font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--fg-muted);">— J. Cobb <span style="margin-left:8px;opacity:.7;">· Pitt Co.</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div data-slide style="width:33.333%;flex:0 0 auto;padding:0 2px;" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true">
+                <div style="max-width:880px;margin:0 auto;">
+                  <div class="card" style="background:var(--lb-bone);padding:32px 34px;border-radius:10px;display:flex;flex-direction:column;gap:18px;">
+                    <div style="color:var(--lb-sawdust);font-size:16px;letter-spacing:3px;">★★★★★</div>
+                    <blockquote class="italic-display" style="font-size:24px;line-height:1.35;margin:0;color:var(--lb-ink);">"These guys were patient and precise...two qualities I'll take all day long when someone is bringing a tree down 10 feet from my house!"</blockquote>
+                    <div style="margin-top:auto;font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--fg-muted);">— S. Bircher <span style="margin-left:8px;opacity:.7;">· Craven Co.</span></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;gap:16px;flex-wrap:wrap;">
+            <div data-carousel-dots style="display:flex;gap:10px;">
+              <button data-dot type="button" aria-label="Go to review 1" aria-current="true"  style="width:28px;height:10px;border-radius:999px;border:none;cursor:pointer;background:var(--lb-navy);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to review 2" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to review 3" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button data-carousel-prev type="button" aria-label="Previous review" style="width:48px;height:48px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"><i data-lucide="arrow-left" style="width:20px;height:20px;display:inline-flex;flex:0 0 auto;"></i></button>
+              <button data-carousel-next type="button" aria-label="Next review"     style="width:48px;height:48px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;"><i data-lucide="arrow-right" style="width:20px;height:20px;display:inline-flex;flex:0 0 auto;"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRHowItWorks -->
+    <section class="section bg-paper-deep">
+      <div class="container">
+        <div style="margin-bottom:64px;">
+          <h2 class="display" style="font-size:clamp(44px,5vw,68px);color:var(--lb-navy);margin:0;max-width:14ch;">How it works</h2>
+        </div>
+        <div class="row-3">
+          <div class="card" style="background:var(--lb-bone);padding:40px 36px;display:flex;flex-direction:column;gap:18px;">
+            <div class="display" style="font-size:56px;line-height:1;color:var(--lb-rust);">01</div>
+            <h3 style="font-family:var(--font-display);font-size:28px;color:var(--lb-navy);margin:0;line-height:1.1;letter-spacing:-.01em;">Receive a fixed quote</h3>
+            <p style="font-family:var(--font-sans);font-size:15px;color:var(--fg-soft);margin:0;line-height:1.55;">We evaluate the job and give you an itemized quote that will never change. In many cases we can quote from photos, no visit required.</p>
+          </div>
+          <div class="card" style="background:var(--lb-bone);padding:40px 36px;display:flex;flex-direction:column;gap:18px;">
+            <div class="display" style="font-size:56px;line-height:1;color:var(--lb-rust);">02</div>
+            <h3 style="font-family:var(--font-display);font-size:28px;color:var(--lb-navy);margin:0;line-height:1.1;letter-spacing:-.01em;">Schedule at your convenience</h3>
+            <p style="font-family:var(--font-sans);font-size:15px;color:var(--fg-soft);margin:0;line-height:1.55;">Call us, text us, or book online. Our calendar is always current and we'll confirm a time that works for you.</p>
+          </div>
+          <div class="card" style="background:var(--lb-bone);padding:40px 36px;display:flex;flex-direction:column;gap:18px;">
+            <div class="display" style="font-size:56px;line-height:1;color:var(--lb-rust);">03</div>
+            <h3 style="font-family:var(--font-display);font-size:28px;color:var(--lb-navy);margin:0;line-height:1.1;letter-spacing:-.01em;">Flexible payment options</h3>
+            <p style="font-family:var(--font-sans);font-size:15px;color:var(--fg-soft);margin:0;line-height:1.55;">We accept cash, card, and check. Financing is also available.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRSaveCallout -->
+    <section class="section-tight bg-navy" style="color:var(--lb-bone);">
+      <div class="container row-2-split">
+        <div>
+          <div class="display" style="font-size:clamp(56px,11vw,110px);line-height:.9;color:var(--lb-sawdust);margin:0;letter-spacing:-.02em;">Get up to 30% off</div>
+          <h2 class="display" style="font-size:clamp(32px,3.6vw,44px);color:var(--lb-bone);margin:16px 0;line-height:1.0;letter-spacing:-.01em;">with <em style="font-style:italic;">Help and Save</em></h2>
+          <p style="font-family:var(--font-sans);font-size:17px;color:rgba(251,247,238,.8);line-height:1.55;max-width:50ch;margin:0;">
+            We handle the dangerous stuff. Then, you help us clean up. Real savings for folks who don't mind getting their hands dirty.
+          </p>
+        </div>
+        <div style="background:rgba(251,247,238,.06);border-radius:10px;display:grid;grid-template-columns:1fr;">
+          <div style="padding:28px 32px;">
+            <div style="font-family:var(--font-sans);font-size:14px;font-weight:700;color:var(--lb-bone);text-transform:uppercase;letter-spacing:.08em;">Our job</div>
+            <div style="margin-top:10px;font-family:var(--font-display);font-size:clamp(22px,2.2vw,28px);font-weight:700;color:var(--lb-bone);line-height:1.2;letter-spacing:-.005em;">Climbing, rigging, felling, and heavy logs</div>
+          </div>
+          <div style="height:1px;background:rgba(251,247,238,.12);"></div>
+          <div style="padding:28px 32px;">
+            <div style="font-family:var(--font-sans);font-size:14px;font-weight:700;color:var(--lb-sawdust);text-transform:uppercase;letter-spacing:.08em;">Your job</div>
+            <div style="margin-top:10px;font-family:var(--font-display);font-size:clamp(22px,2.2vw,28px);font-weight:700;color:var(--lb-sawdust);line-height:1.2;letter-spacing:-.005em;">Limbs, leaves, and firewood</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRRecentWork -->
+    <section class="section-tight" id="recent-work">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;gap:24px;flex-wrap:wrap;">
+          <h2 class="display" style="font-size:clamp(40px,4.8vw,64px);color:var(--lb-navy);margin:0;line-height:1.0;max-width:14ch;">On the job</h2>
+          <span data-recent-counter style="font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--fg-muted);">01 / 06</span>
+        </div>
+
+        <div role="region" aria-roledescription="carousel" aria-label="Recent work photos" tabindex="0" style="outline:none;"
+             onkeydown="if(event.key==='ArrowLeft'){event.preventDefault();document.querySelector('[data-recent-prev]').click()}if(event.key==='ArrowRight'){event.preventDefault();document.querySelector('[data-recent-next]').click()}">
+          <div class="tr-recent-track">
+            <div class="tr-recent-slide" role="group" aria-roledescription="slide" aria-label="1 of 6">
+              <button type="button" class="tr-recent-photo-btn" aria-label="Expand photo: Removing two large pines • Washington, NC" data-lightbox-src="assets/pine-tree-removal-before-after.webp" data-lightbox-tag="Removing two large pines • Washington, NC" style="all:unset;display:block;width:100%;cursor:zoom-in;position:relative;border-radius:8px;overflow:hidden;">
+                <div class="photo photo-forest tr-recent-photo" style="background-image:url(assets/pine-tree-removal-before-after.webp);background-size:cover;background-position:center;"><span class="tag">Removing two large pines • Washington, NC</span></div>
+                <span class="tr-recent-expand-hint" aria-hidden="true" style="position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(14,12,8,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;transition:opacity 160ms ease;"><i data-lucide="expand" style="width:15px;height:15px;display:inline-flex;flex:0 0 auto;"></i></span>
+              </button>
+            </div>
+            <div class="tr-recent-slide" role="group" aria-roledescription="slide" aria-label="2 of 6">
+              <button type="button" class="tr-recent-photo-btn" aria-label="Expand photo: Alex rigging a limb • Washington, NC" data-lightbox-src="assets/photos/arborist-climbing-tall-pine-tree-7.webp" data-lightbox-tag="Alex rigging a limb • Washington, NC" style="all:unset;display:block;width:100%;cursor:zoom-in;position:relative;border-radius:8px;overflow:hidden;">
+                <div class="photo photo-forest tr-recent-photo" style="background-image:url(assets/photos/arborist-climbing-tall-pine-tree-7.webp);background-size:cover;background-position:center;"><span class="tag">Alex rigging a limb • Washington, NC</span></div>
+                <span class="tr-recent-expand-hint" aria-hidden="true" style="position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(14,12,8,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;transition:opacity 160ms ease;"><i data-lucide="expand" style="width:15px;height:15px;display:inline-flex;flex:0 0 auto;"></i></span>
+              </button>
+            </div>
+            <div class="tr-recent-slide" role="group" aria-roledescription="slide" aria-label="3 of 6">
+              <button type="button" class="tr-recent-photo-btn" aria-label="Expand photo: Making cookies • Williamston, NC" data-lightbox-src="assets/photos/woman-chainsaw-cutting-log.webp" data-lightbox-tag="Making cookies • Williamston, NC" style="all:unset;display:block;width:100%;cursor:zoom-in;position:relative;border-radius:8px;overflow:hidden;">
+                <div class="photo photo-forest tr-recent-photo" style="background-image:url(assets/photos/woman-chainsaw-cutting-log.webp);background-size:cover;background-position:center;"><span class="tag">Making cookies • Williamston, NC</span></div>
+                <span class="tr-recent-expand-hint" aria-hidden="true" style="position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(14,12,8,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;transition:opacity 160ms ease;"><i data-lucide="expand" style="width:15px;height:15px;display:inline-flex;flex:0 0 auto;"></i></span>
+              </button>
+            </div>
+            <div class="tr-recent-slide" role="group" aria-roledescription="slide" aria-label="4 of 6">
+              <button type="button" class="tr-recent-photo-btn" aria-label="Expand photo: Old growth Pecan removal • Williamston, NC" data-lightbox-src="assets/photos/cut-logs-farmhouse-yard.webp" data-lightbox-tag="Old growth Pecan removal • Williamston, NC" style="all:unset;display:block;width:100%;cursor:zoom-in;position:relative;border-radius:8px;overflow:hidden;">
+                <div class="photo photo-amber tr-recent-photo" style="background-image:url(assets/photos/cut-logs-farmhouse-yard.webp);background-size:cover;background-position:center;"><span class="tag">Old growth Pecan removal • Williamston, NC</span></div>
+                <span class="tr-recent-expand-hint" aria-hidden="true" style="position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(14,12,8,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;transition:opacity 160ms ease;"><i data-lucide="expand" style="width:15px;height:15px;display:inline-flex;flex:0 0 auto;"></i></span>
+              </button>
+            </div>
+            <div class="tr-recent-slide" role="group" aria-roledescription="slide" aria-label="5 of 6">
+              <button type="button" class="tr-recent-photo-btn" aria-label="Expand photo: Storm cleanup • Greenville, NC" data-lightbox-src="assets/photos/fallen-tree-logs-brick-house.webp" data-lightbox-tag="Storm cleanup • Greenville, NC" style="all:unset;display:block;width:100%;cursor:zoom-in;position:relative;border-radius:8px;overflow:hidden;">
+                <div class="photo photo-forest tr-recent-photo" style="background-image:url(assets/photos/fallen-tree-logs-brick-house.webp);background-size:cover;background-position:center;"><span class="tag">Storm cleanup • Greenville, NC</span></div>
+                <span class="tr-recent-expand-hint" aria-hidden="true" style="position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(14,12,8,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;transition:opacity 160ms ease;"><i data-lucide="expand" style="width:15px;height:15px;display:inline-flex;flex:0 0 auto;"></i></span>
+              </button>
+            </div>
+            <div class="tr-recent-slide" role="group" aria-roledescription="slide" aria-label="6 of 6">
+              <button type="button" class="tr-recent-photo-btn" aria-label="Expand photo: Alex chunking a huge spar • Washington, NC" data-lightbox-src="assets/photos/woman-chainsawing-log-outdoors.webp" data-lightbox-tag="Alex chunking a huge spar • Washington, NC" style="all:unset;display:block;width:100%;cursor:zoom-in;position:relative;border-radius:8px;overflow:hidden;">
+                <div class="photo photo-forest tr-recent-photo" style="background-image:url(assets/photos/woman-chainsawing-log-outdoors.webp);background-size:cover;background-position:center;"><span class="tag">Alex chunking a huge spar • Washington, NC</span></div>
+                <span class="tr-recent-expand-hint" aria-hidden="true" style="position:absolute;bottom:12px;right:12px;width:34px;height:34px;border-radius:999px;background:rgba(14,12,8,.55);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none;transition:opacity 160ms ease;"><i data-lucide="expand" style="width:15px;height:15px;display:inline-flex;flex:0 0 auto;"></i></span>
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:24px;gap:16px;flex-wrap:wrap;">
+            <div data-recent-dots style="display:flex;gap:10px;">
+              <button data-dot type="button" aria-label="Go to photo 1" style="width:28px;height:10px;border-radius:999px;border:none;cursor:pointer;background:var(--lb-navy);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to photo 2" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to photo 3" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to photo 4" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to photo 5" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+              <button data-dot type="button" aria-label="Go to photo 6" style="width:10px;height:10px;border-radius:999px;border:none;cursor:pointer;background:rgba(0,0,0,.18);padding:0;transition:width 240ms ease,background 240ms ease;"></button>
+            </div>
+            <div style="display:flex;gap:10px;">
+              <button data-recent-prev type="button" aria-label="Previous photo" style="width:48px;height:48px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;opacity:.4;transition:opacity 180ms ease;"><i data-lucide="arrow-left" style="width:20px;height:20px;display:inline-flex;flex:0 0 auto;"></i></button>
+              <button data-recent-next type="button" aria-label="Next photo"     style="width:48px;height:48px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:var(--lb-bone);color:var(--lb-ink-soft);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 180ms ease;"><i data-lucide="arrow-right" style="width:20px;height:20px;display:inline-flex;flex:0 0 auto;"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRDifferent -->
+    <section class="section bg-paper-deep">
+      <div class="container">
+        <div class="row-2-split-wide">
+          <div>
+            <h2 class="display" style="font-size:clamp(44px,5.2vw,72px);color:var(--lb-navy);margin:0 0 24px;line-height:1.0;">A different kind of tree service</h2>
+            <p style="font-family:var(--font-sans);font-size:17px;color:var(--fg-soft);line-height:1.6;max-width:42ch;margin:0;">
+              We'd rather build something with timber than see it mulched, burned, or buried. So we designed Lumber Bros differently. <strong style="color:var(--lb-ink);font-weight:700;">The result is pricing that's fair and affordable.</strong>
+            </p>
+            <p style="font-family:var(--font-sans);font-size:17px;color:var(--fg-soft);line-height:1.6;max-width:42ch;margin-top:18px;">
+              Not because we cut corners. Because we built an operation with a ridiculously low overhead.
+            </p>
+          </div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px;">
+            <li class="card" style="background:var(--lb-bone);padding:24px 28px;display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:baseline;">
+              <div class="display" style="font-size:24px;color:var(--lb-rust);">01</div>
+              <p style="font-family:var(--font-sans);font-size:17px;font-weight:500;color:var(--lb-ink);margin:0;line-height:1.5;">We buy and maintain used equipment (with cash) instead of financing new toys.</p>
+            </li>
+            <li class="card" style="background:var(--lb-bone);padding:24px 28px;display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:baseline;">
+              <div class="display" style="font-size:24px;color:var(--lb-rust);">02</div>
+              <p style="font-family:var(--font-sans);font-size:17px;font-weight:500;color:var(--lb-ink);margin:0;line-height:1.5;">We climb and rig whenever possible to minimize heavy machinery and fuel.</p>
+            </li>
+            <li class="card" style="background:var(--lb-bone);padding:24px 28px;display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:baseline;">
+              <div class="display" style="font-size:24px;color:var(--lb-rust);">03</div>
+              <p style="font-family:var(--font-sans);font-size:17px;font-weight:500;color:var(--lb-ink);margin:0;line-height:1.5;">We mill the timber we remove, and pass the savings to our customers.</p>
+            </li>
+            <li class="card" style="background:var(--lb-bone);padding:24px 28px;display:grid;grid-template-columns:36px 1fr;gap:18px;align-items:baseline;">
+              <div class="display" style="font-size:24px;color:var(--lb-rust);">04</div>
+              <p style="font-family:var(--font-sans);font-size:17px;font-weight:500;color:var(--lb-ink);margin:0;line-height:1.5;">We run lean, using technology to cut the overhead that bloats most small businesses.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRServiceAreas -->
+    <section class="section-tight bg-paper">
+      <div class="container">
+        <div class="row-2-aside">
+          <div>
+            <h2 class="display" style="font-size:clamp(36px,4.2vw,56px);color:var(--lb-ink);margin:0 0 16px;line-height:1.0;">Service areas</h2>
+            <p style="font-family:var(--font-sans);font-size:14px;color:var(--fg-muted);margin:0;line-height:1.55;">Surrounding areas considered case by case. Give us a call.</p>
+            <div style="margin-top:24px;">
+              <a href="tel:2524950720" class="btn btn-cream"><i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i> (252) 495-0720</a>
+            </div>
+          </div>
+          <div class="row-3">
+            <div class="card" style="background:var(--lb-bone);padding:20px 24px;display:flex;flex-direction:row;align-items:center;gap:14px;">
+              <i data-lucide="map-pin" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;color:var(--lb-rust);"></i>
+              <h3 style="font-family:var(--font-display);font-size:24px;color:var(--lb-navy);margin:0;letter-spacing:-.005em;line-height:1.2;">Beaufort County</h3>
+            </div>
+            <div class="card" style="background:var(--lb-bone);padding:20px 24px;display:flex;flex-direction:row;align-items:center;gap:14px;">
+              <i data-lucide="map-pin" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;color:var(--lb-rust);"></i>
+              <h3 style="font-family:var(--font-display);font-size:24px;color:var(--lb-navy);margin:0;letter-spacing:-.005em;line-height:1.2;">Pitt County</h3>
+            </div>
+            <div class="card" style="background:var(--lb-bone);padding:20px 24px;display:flex;flex-direction:row;align-items:center;gap:14px;">
+              <i data-lucide="map-pin" style="width:22px;height:22px;display:inline-flex;flex:0 0 auto;color:var(--lb-rust);"></i>
+              <h3 style="font-family:var(--font-display);font-size:24px;color:var(--lb-navy);margin:0;letter-spacing:-.005em;line-height:1.2;">Washington County</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRFaq -->
+    <section class="section bg-paper-deep">
+      <div class="container-narrow">
+        <h2 class="display" style="font-size:clamp(40px,4.8vw,60px);color:var(--lb-navy);margin:0 0 40px;line-height:1.0;">Frequently asked questions</h2>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">How do I get a quote?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">Fill out our short form online or call us at <a href="tel:2524950720">(252) 495-0720</a>. We'll get back to you within 24 hours. In many cases we can quote from photos — no visit required.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">Will the price change after you start the job?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">No. We provide fixed, itemized quotes before we touch anything. What we quote is what you pay.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">Will you damage my lawn or landscaping?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">We climb and rig most jobs specifically to avoid this. No heavy equipment means no ruts, no crushed beds, no tracked-up yard.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">Are you insured?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">Yes. We carry $2 million in general liability coverage on every job. You can request our certificate of insurance before we start.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">Do you offer emergency service?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">Yes. If a storm has created an immediate hazard, call us directly at <a href="tel:2524950720">(252) 495-0720</a>.</div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">What happens to the wood and debris?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">
+              <p style="margin:0;">We haul all debris and timber away to be repurposed into lumber, slabs, or other products through our woodworks operation — nothing goes to waste.</p>
+              <p style="margin:14px 0 0;">Alternatively, you can choose our Help &amp; Save option if you don't mind handling some of the smaller debris yourself.</p>
+              <p style="margin:14px 0 0;">You may also request firewood cut to size. Just ask us!</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-btn"><span style="font-family:var(--font-sans);font-size:18px;font-weight:700;color:var(--lb-ink);">Do I need a permit to remove a tree in Beaufort, Pitt, or Washington County?</span><span class="faq-icon display" style="font-size:28px;color:var(--lb-rust);line-height:1;">+</span></button>
+            <div class="faq-body">It depends on your municipality and the species of tree. Some towns have local ordinances governing removal of certain protected species. We'll help you understand what applies to your property when we come out.</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TRFinalCTA -->
+    <section class="section bg-navy" style="color:var(--lb-bone);">
+      <div class="container" style="text-align:center;">
+        <h2 class="display" style="font-size:clamp(48px,6.4vw,104px);color:var(--lb-bone);margin:0 auto 24px;line-height:.95;max-width:14ch;letter-spacing:-.015em;">
+          Let's get that tree down
+        </h2>
+        <p style="font-family:var(--font-sans);font-size:19px;color:rgba(251,247,238,.8);margin:0 auto;max-width:44ch;line-height:1.5;">
+          We respond within 24 hours, guaranteed.
+        </p>
+        <div style="margin-top:40px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
+          <a href="https://forms.example.com/lumberbros-quote" class="btn btn-rust btn-lg">
+            Get a free quote <i data-lucide="arrow-up-right" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i>
+          </a>
+          <a href="tel:2524950720" class="btn btn-ghost-light btn-lg">
+            <i data-lucide="phone" style="width:16px;height:16px;display:inline-flex;flex:0 0 auto;"></i> (252) 495-0720
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer class="bg-black" style="color:var(--lb-bone);padding-top:96px;padding-bottom:48px;">
+    <div class="container row-4" style="gap:48px;">
+      <div>
+        <img src="assets/logo.svg" alt="Lumber Bros." width="220" style="height:auto;display:block;filter:brightness(0) invert(1);max-width:min(220px,70vw);">
+        <p style="font-family:var(--font-sans);font-size:15px;color:rgba(251,247,238,.7);margin-top:28px;max-width:340px;line-height:1.55;">
+          Family-run tree service, sawmill, and custom-build shop. Serving Eastern North Carolina since 2024.
+        </p>
+      </div>
+      <div>
+        <div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-sawdust);">Services</div>
+        <ul style="list-style:none;padding:0;margin:18px 0 0;display:flex;flex-direction:column;gap:10px;">
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Precision Tree Removal</a></li>
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Milling</a></li>
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Custom Builds</a></li>
+          <li><a href="#" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">Wood Products</a></li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-sawdust);">Service areas</div>
+        <ul style="list-style:disc;padding:0 0 0 20px;margin:18px 0 0;display:flex;flex-direction:column;gap:10px;">
+          <li style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;">Beaufort County</li>
+          <li style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;">Pitt Co.</li>
+          <li style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;">Washington County</li>
+        </ul>
+        <p style="margin-top:14px;color:rgba(251,247,238,.6);font-family:var(--font-sans);font-size:13px;line-height:1.5;">Surrounding areas on a case-by-case basis.</p>
+      </div>
+      <div>
+        <div style="font-family:var(--font-sans);font-size:15px;font-weight:700;color:var(--lb-sawdust);">Contact us</div>
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:14px;">
+          <a href="tel:2524950720" style="font-family:var(--font-display);font-size:28px;color:var(--lb-bone);font-weight:700;letter-spacing:-.01em;text-decoration:none;line-height:1.1;">(252) 495-0720</a>
+          <a href="mailto:hello@lumberbros.co" style="color:rgba(251,247,238,.85);font-family:var(--font-sans);font-size:15px;text-decoration:none;">hello@lumberbros.co</a>
+          <p style="color:rgba(251,247,238,.7);font-family:var(--font-sans);font-size:14px;line-height:1.5;margin:0;">Mon–Sat, 7:00a–6:00p</p>
+        </div>
+      </div>
+    </div>
+    <div class="container" style="margin-top:80px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--font-sans);font-size:13px;color:rgba(251,247,238,.5);">
+      <span>© 2025 Lumber Bros. LLC · Washington, NC</span>
+      <span>ISA Professional Member CSID: 374451</span>
+    </div>
+  </footer>
+
+  <!-- ════════════════ LIGHTBOX ════════════════ -->
+  <div id="photo-lightbox" role="dialog" aria-modal="true" aria-label="Photo expanded view">
+    <button id="lightbox-close" type="button" aria-label="Close photo">
+      <i data-lucide="x" style="width:20px;height:20px;display:inline-flex;flex:0 0 auto;"></i>
+    </button>
+    <div class="lightbox-inner">
+      <img id="lightbox-img" src="" alt="">
+      <div id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="site.js"></script>
 </body>
 </html>
