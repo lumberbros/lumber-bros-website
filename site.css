@@ -1,0 +1,727 @@
+/* ============================================================
+   Lumber Bros. — UI Kit shared styles (website)
+   ============================================================ */
+
+@import url("colors_and_type.css");
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--fg); }
+
+.container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+.container-narrow { max-width: var(--container-narrow); margin: 0 auto; padding: 0 var(--gutter); }
+
+.section { padding: clamp(72px, 10vw, 144px) 0; }
+.section-tight { padding: clamp(56px, 7vw, 96px) 0; }
+
+.bg-paper { background: var(--lb-paper); }
+.bg-paper-deep { background: var(--lb-paper-deep); }
+.bg-bone { background: var(--lb-bone); }
+.bg-sage-soft { background: var(--lb-sage-100); }
+.bg-navy { background: var(--lb-navy); color: var(--lb-bone); }
+.bg-ink { background: var(--lb-ink); color: var(--lb-bone); }
+/* Reserved for site footer per design system. */
+.bg-black { background: var(--lb-black); color: var(--lb-bone); }
+
+/* Section kicker pattern removed — see Shared.jsx history. */
+
+/* ============================================================
+   Marquee strip — infinite horizontal scroll
+   ============================================================ */
+.marquee { position: relative; }
+.marquee-track {
+  animation: lb-marquee 40s linear infinite;
+  will-change: transform;
+}
+@keyframes lb-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* ============================================================
+   Buttons — flat fills, no letterpress 1px shadow.
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  padding: 16px 26px;
+  border-radius: 6px;
+  border: none;
+  background: var(--lb-paper-deep);
+  color: var(--lb-ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.btn:hover { background: #D7D4C8; }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: 2px solid var(--lb-rust); outline-offset: 3px; }
+
+.btn-primary { background: var(--lb-navy); color: var(--lb-bone); }
+.btn-primary:hover { background: var(--lb-navy-700); }
+
+.btn-rust { background: var(--lb-rust); color: var(--lb-bone); }
+.btn-rust:hover { background: var(--lb-rust-700); }
+
+.btn-sage { background: var(--lb-sage); color: var(--lb-bone); }
+.btn-sage:hover { background: var(--lb-sage-700); }
+
+.btn-cream { background: var(--lb-bone); color: var(--lb-ink); }
+.btn-cream:hover { background: #F1EFE8; }
+
+.btn-ghost-light { background: rgba(251, 247, 238, 0.08); color: var(--lb-bone); }
+.btn-ghost-light:hover { background: rgba(251, 247, 238, 0.18); }
+
+.btn-text {
+  background: transparent;
+  padding: 8px 0;
+  color: var(--lb-navy);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1.5px;
+  letter-spacing: 0;
+}
+.btn-text:hover { background: transparent; color: var(--lb-rust); }
+
+.btn-lg { padding: 20px 32px; font-size: 15px; }
+
+/* ============================================================
+   Chips — filled pills, no border.
+   ============================================================ */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--lb-paper-deep);
+  color: var(--lb-ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+.chip-sage { background: var(--lb-sage-100); color: var(--lb-sage-700); }
+.chip-bone { background: var(--lb-bone); color: var(--lb-ink); }
+.bg-navy .chip, .bg-ink .chip, .bg-black .chip { background: rgba(251, 247, 238, 0.10); color: var(--lb-bone); }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ============================================================
+   Trust signals — design-system primitive for value props and
+   credential lists. Rust dot + bold ink label.
+   Variant: .trust-signals-cols → 2-up grid (used in hero-like
+   contexts where items are short and benefit from alignment).
+   ============================================================ */
+.trust-signals {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+}
+.trust-signals-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 28px;
+  max-width: 56ch;
+}
+@media (max-width: 1024px) {
+  .trust-signals-cols { grid-template-columns: 1fr; }
+}
+.trust-signal {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0;
+}
+.trust-signal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--lb-rust);
+  justify-self: center;
+  transform: translateY(-3px);
+  flex: 0 0 auto;
+}
+/* Check variant — slightly larger marker slot so the glyph reads cleanly. */
+.trust-signals-check .trust-signal { grid-template-columns: 18px 1fr; align-items: center; }
+.trust-signal-check {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--lb-rust);
+  justify-self: center;
+  flex: 0 0 auto;
+}
+.bg-navy .trust-signal-check,
+.bg-ink .trust-signal-check,
+.bg-black .trust-signal-check { color: var(--lb-sawdust); }
+.trust-signal-label {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--lb-ink);
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.bg-navy .trust-signal-label,
+.bg-ink .trust-signal-label,
+.bg-black .trust-signal-label { color: var(--lb-bone); }
+.bg-navy .trust-signal-dot,
+.bg-ink .trust-signal-dot,
+.bg-black .trust-signal-dot { background: var(--lb-sawdust); }
+
+/* ============================================================
+   Inputs — soft fills (form is external, retained for ad-hoc use)
+   ============================================================ */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-soft);
+}
+.field-input, .field-textarea, .field-select {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--lb-ink);
+  background: var(--lb-bone);
+  border: none;
+  border-radius: 6px;
+  padding: 14px 16px;
+  width: 100%;
+  font-weight: 500;
+}
+.field-input::placeholder, .field-textarea::placeholder { color: var(--fg-faint); font-weight: 400; }
+.field-input:focus, .field-textarea:focus, .field-select:focus { outline: 2px solid var(--lb-rust); outline-offset: 2px; }
+.field-textarea { resize: vertical; min-height: 110px; font-family: var(--font-sans); }
+
+/* ============================================================
+   Photos — no frame, no border. Tinted gradient reads as image.
+   ============================================================ */
+.photo {
+  position: relative;
+  background: var(--lb-paper-deep);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+.photo .desc {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 18px;
+  color: rgba(251, 247, 238, 0.65);
+  text-align: center;
+  max-width: 72%;
+  line-height: 1.3;
+  padding: 8px 16px;
+  position: relative;
+  z-index: 2;
+}
+.photo::before {
+  /* subtle paper grain / atmospheric texture */
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(0,0,0,0.08) 0, transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(0,0,0,0.10) 0, transparent 50%);
+  z-index: 1;
+  pointer-events: none;
+}
+.photo .tag {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(251, 247, 238, 0.85);
+  background: rgba(0,0,0,0.4);
+  padding: 6px 12px;
+  border-radius: 999px;
+  z-index: 3;
+}
+
+/* photo tones — slightly different "scenes" so layout reads as multiple images */
+.photo-forest { background: linear-gradient(135deg, #3F5A3D 0%, #2E4A2B 70%, #1F341D 100%); color: var(--lb-bone); }.photo-dusk   { background: linear-gradient(160deg, #6B7F4A 0%, #4D5E33 60%, #2E4A2B 100%); color: var(--lb-bone); }
+.photo-amber  { background: linear-gradient(160deg, #E8C285 0%, #C9994B 60%, #7C5A23 100%); }
+.photo-amber .desc { color: rgba(40, 28, 10, 0.7); }
+.photo-shop   { background: linear-gradient(180deg, #5C4831 0%, #3A2D1F 100%); color: var(--lb-bone); }
+
+/* Recent-work carousel — landscape on desktop, taller poster on phones */
+.tr-recent-photo { aspect-ratio: 16 / 10; width: 100%; }
+@media (max-width: 720px) {
+  .tr-recent-photo { aspect-ratio: 4 / 5; }
+}
+
+/* Native scroll-snap track. Slide widths drive how many photos are visible —
+   ~33% on desktop (3-up grid), ~50% on tablet, ~82% on phone so the next
+   card peeks past the right edge as a swipe affordance. */
+.tr-recent-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;          /* Firefox */
+  padding-bottom: 4px;            /* leave room so snapped focus rings don't clip */
+}
+.tr-recent-track::-webkit-scrollbar { display: none; }
+.tr-recent-slide {
+  flex: 0 0 calc((100% - 16px * 2) / 3);    /* 3 visible, 2 gaps */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+@media (max-width: 1024px) {
+  .tr-recent-slide { flex-basis: calc((100% - 16px) / 2); }  /* 2 visible */
+}
+@media (max-width: 720px) {
+  /* Phone: ~82% so a slice of the next card is visible past the edge. */
+  .tr-recent-track {
+    gap: 12px;
+    /* Bleed to the screen edges so the peek actually shows past .container's gutter. */
+    margin-left: calc(var(--gutter) * -1);
+    margin-right: calc(var(--gutter) * -1);
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+    scroll-padding-left: var(--gutter);
+  }
+  .tr-recent-slide { flex-basis: 82%; }
+}
+
+/* ============================================================
+   Tree Removal LP hero — V2 editorial above-the-fold layout
+   ============================================================ */
+.tr-hero-v2 {
+  padding: 28px 0 clamp(56px, 6vw, 96px);
+}
+.tr-hero-v2-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(0, 0.78fr);
+  gap: 64px;
+  align-items: stretch;
+  min-height: clamp(520px, 70vh, 720px);
+}
+.tr-hero-v2-text {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 8px 0 28px;
+  align-self: center;
+  max-width: 56ch;
+}
+.tr-hero-v2-title {
+  font-size: clamp(48px, 6.4vw, 104px);
+  line-height: 0.96;
+  letter-spacing: -0.02em;
+}
+/* SEO H1 — a small label that sits above the visual headline (the H2).
+   Kept deliberately minimal so the H2 remains the reader's focus. */
+.tr-hero-v2-headline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.tr-hero-v2-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lb-rust);
+  line-height: 1.35;
+  margin: 0;
+  max-width: 44ch;
+}
+.tr-hero-v2-sub {
+  font-family: var(--font-sans);
+  font-size: 19px;
+  color: var(--fg-soft);
+  line-height: 1.5;
+  max-width: 46ch;
+  margin: 0;
+}
+.tr-hero-v2-cta {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.tr-hero-v2-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--lb-navy);
+  text-decoration: none;
+  letter-spacing: -0.005em;
+}
+.tr-hero-v2-phone:hover { color: var(--lb-rust); }
+
+.tr-hero-v2-photo-wrap {
+  align-self: stretch;
+  position: relative; /* establishes containing block for the absolutely-inset video */
+}
+.tr-hero-v2-photo {
+  height: 100%;
+  width: 100%;
+  min-height: 540px;
+  border-radius: 12px;
+}
+
+/* Horizontal value-prop strip below hero block (legacy — superseded by .tr-trust-bar) */
+.tr-hero-v2-vp {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 28px;
+  border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+  border-bottom: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+}
+.tr-hero-v2-vp-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px;
+  border-left: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+}
+.tr-hero-v2-vp-cell:first-child { border-left: none; }
+.tr-hero-v2-vp-label {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.05vw, 17px);
+  font-weight: 700;
+  color: var(--lb-navy);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+
+/* ============================================================
+   Trust bar — dedicated credentials strip beneath the hero.
+   Its own band (deeper paper) so credentials feel separate
+   from the hero's narrative, with vertical dividers between
+   cells. Wraps on narrow viewports.
+   ============================================================ */
+.tr-trust-bar {
+  background: var(--lb-paper-deep);
+}
+.tr-trust-bar-header {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lb-rust);
+  margin-bottom: 14px;
+}
+.tr-trust-bar-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+.tr-trust-bar-img {
+  height: 48px;
+  width: 48px;
+  object-fit: contain;
+  display: block;
+  flex: 0 0 48px;
+}
+.tr-trust-bar-sublabel {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--lb-ink-soft, rgba(0,0,0,0.55));
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+.tr-trust-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px;
+  border-left: 1px solid rgba(0,0,0,0.08);
+  min-height: 88px;
+}
+.tr-trust-bar-cell > svg {
+  flex: 0 0 48px;
+  width: 32px;
+  height: 32px;
+  margin: 0 8px;
+}
+.tr-trust-bar-cell:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+.tr-trust-bar-cell:last-child { padding-right: 0; }
+.tr-trust-bar-label {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.05vw, 16px);
+  font-weight: 700;
+  color: var(--lb-navy);
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+@media (max-width: 1100px) {
+  .tr-trust-bar-row { grid-template-columns: repeat(3, 1fr); }
+  .tr-trust-bar-cell {
+    padding: 18px 20px;
+    border-left: 1px solid rgba(0,0,0,0.08);
+  }
+  .tr-trust-bar-cell:first-child { padding-left: 20px; }
+  .tr-trust-bar-cell:nth-child(3n+1) {
+    border-left: none;
+    padding-left: 0;
+  }
+  .tr-trust-bar-cell:not(:nth-last-child(-n+2)) {
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .tr-trust-bar-cell:nth-last-child(2):nth-child(3n+2),
+  .tr-trust-bar-cell:nth-last-child(1):nth-child(3n+1) {
+    border-bottom: none;
+  }
+}
+@media (max-width: 720px) {
+  .tr-trust-bar-row {
+    grid-template-columns: 1fr;
+  }
+  .tr-trust-bar-cell {
+    padding: 16px 0;
+    border-left: none;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    min-height: 0;
+    gap: 16px;
+  }
+  .tr-trust-bar-cell:first-child,
+  .tr-trust-bar-cell:nth-child(3n+1) {
+    padding-left: 0;
+  }
+  .tr-trust-bar-cell:last-child { border-bottom: none; }
+  .tr-trust-bar-cell > svg {
+    margin: 0;
+  }
+  .tr-trust-bar-img {
+    height: 44px;
+    width: 48px;
+    flex: 0 0 48px;
+  }
+  .tr-trust-bar-label {
+    font-size: 16px;
+  }
+  .tr-trust-bar-sublabel {
+    font-size: 12.5px;
+  }
+}
+
+@media (max-width: 900px) {
+  .tr-hero-v2-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    min-height: 0;
+  }
+  .tr-hero-v2-text { max-width: none; padding-bottom: 8px; }
+  .tr-hero-v2-photo {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 3 / 4;
+    /* Stay inside the container gutter — same treatment as carousel photos */
+    width: 100%;
+    border-radius: 12px;
+  }
+  .tr-hero-v2-vp { grid-template-columns: repeat(2, 1fr); }
+  .tr-hero-v2-vp-cell:nth-child(2) { border-left: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+  .tr-hero-v2-vp-cell:nth-child(3) { border-left: none; border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+  .tr-hero-v2-vp-cell:nth-child(4) { border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+}
+@media (max-width: 560px) {
+  .tr-hero-v2-vp { grid-template-columns: 1fr; }
+  .tr-hero-v2-vp-cell { border-left: none !important; }
+  .tr-hero-v2-vp-cell + .tr-hero-v2-vp-cell { border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+}
+
+/* Tree Removal LP hero — text-left, photo-right split. Photo stretches
+   to match text-column height on desktop, becomes a fixed banner on mobile. */
+.tr-hero-photo {
+  height: 100%;
+  min-height: 480px;
+  width: 100%;
+}
+.tr-hero-value-props { margin-top: 4px; }
+/* 2x2 borders for the hero value-props at all widths (the global rules
+   in the .value-props block only kick in at <=1024). */
+.tr-hero-value-props .value-prop { border-left: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+.tr-hero-value-props .value-prop:first-child { border-left: none; }
+.tr-hero-value-props .value-prop:nth-child(3) {
+  border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+  border-left: none;
+}
+.tr-hero-value-props .value-prop:nth-child(4) {
+  border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+}
+@media (max-width: 768px) {
+  .tr-hero-photo { height: 360px; min-height: 0; }
+}
+@media (max-width: 560px) {
+  .tr-hero-value-props { grid-template-columns: 1fr !important; }
+  .tr-hero-value-props .value-prop { border-left: none !important; }
+  .tr-hero-value-props .value-prop:nth-child(3),
+  .tr-hero-value-props .value-prop:nth-child(4) { border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); border-left: none; }
+  .tr-hero-value-props .value-prop:nth-child(2) { border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+}
+
+/* Service-line carousel photo — portrait on desktop, fixed-height
+   banner on mobile so it doesn't balloon to ~125vw tall. Matches the
+   sizing approach used on the tree-removal LP hero photo. */
+.photo-service { aspect-ratio: 4 / 5; width: 100%; }
+@media (max-width: 768px) {
+  .photo-service { aspect-ratio: auto; height: 360px; }
+}
+
+/* ============================================================
+   Cards — backgrounds carry the structure. No borders.
+   ============================================================ */
+.card {
+  background: var(--lb-bone);
+  border-radius: 10px;
+  padding: 28px 30px;
+}
+.card-paper { background: var(--lb-paper-deep); }
+.card-sage { background: var(--lb-sage-100); }
+.card-navy { background: var(--lb-navy); color: var(--lb-bone); }
+.card-ink { background: var(--lb-ink); color: var(--lb-bone); }
+
+/* ============================================================
+   Lucide icon defaults
+   ============================================================ */
+[data-lucide] {
+  stroke-width: 1.5;
+}
+
+/* ============================================================
+   Type utilities
+   ============================================================ */
+.display { font-family: var(--font-display); letter-spacing: -0.01em; line-height: 1.02; font-weight: 700; }
+.italic-display { font-family: var(--font-display); font-style: italic; }
+
+/* All headings use Bookseller CP (--font-display) per design system. */
+
+a.btn, a.btn-text { text-decoration: none; }
+a.btn-text { text-decoration: underline; }
+
+/* ============================================================
+   Responsive utility classes
+   ============================================================ */
+
+/* Two-column row — stacks on tablet and below */
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.row-2-tight { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.row-2-split { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+.row-2-split-rev { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+.row-2-split-rev > :first-child { order: 2; }   /* desktop: photo left, text right (assuming JSX is text-then-photo) */
+.row-2-split-rev > :last-child  { order: 1; }
+.row-2-split-wide { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; }
+.row-2-aside { display: grid; grid-template-columns: 1fr 2.5fr; gap: 64px; align-items: center; }
+
+/* Three- and four-column rows */
+.row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.row-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+
+/* TABLET — collapse asymmetric 2-cols to single column */
+@media (max-width: 1024px) {
+  .row-2-aside { grid-template-columns: 1fr; gap: 32px; }
+  .row-4 { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+}
+
+/* MOBILE — collapse most multi-column layouts */
+@media (max-width: 768px) {
+  .row-2,
+  .row-2-split,
+  .row-2-split-rev,
+  .row-2-split-wide,
+  .row-3 { grid-template-columns: 1fr; gap: 40px; align-items: stretch; }
+
+  .row-2-tight { grid-template-columns: 1fr; gap: 12px; }
+
+  /* When stacked on mobile, always honor source order (text comes first in JSX) */
+  .row-2-split-rev > :first-child,
+  .row-2-split-rev > :last-child { order: initial; }
+
+  .section { padding: clamp(48px, 14vw, 80px) 0; }
+  .section-tight { padding: clamp(40px, 11vw, 64px) 0; }
+}
+
+@media (max-width: 480px) {
+  .row-4 { grid-template-columns: 1fr; gap: 24px; }
+  .row-2-tight { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   Mobile header — hide desktop nav, show menu button
+   ============================================================ */
+.nav-desktop { display: flex; }
+.nav-mobile-toggle { display: none; }
+.header-phone-desktop { display: inline-flex; }
+.header-phone-mobile { display: none; }
+
+@media (max-width: 900px) {
+  .nav-desktop { display: none; }
+  .nav-mobile-toggle { display: inline-flex; }
+  .header-phone-desktop { display: none; }
+  .header-phone-mobile { display: inline-flex; }
+}
+
+/* Very small screens — hide header CTAs entirely; drawer holds them. */
+@media (max-width: 480px) {
+  .header-cta-primary,
+  .header-phone-mobile { display: none !important; }
+}
+
+/* ============================================================
+   Value props — responsive grid of differentiators (TR hero)
+   ============================================================ */
+.value-props .value-prop { border-left: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10)); }
+.value-props .value-prop:first-child { border-left: none; }
+
+@media (max-width: 720px) {
+  .value-props { grid-template-columns: repeat(2, 1fr) !important; }
+  .value-props .value-prop:nth-child(3) {
+    border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+    border-left: none;
+  }
+  .value-props .value-prop:nth-child(4) {
+    border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+  }
+}
+
+@media (max-width: 460px) {
+  .value-props { grid-template-columns: 1fr !important; }
+  .value-props .value-prop { border-left: none !important; }
+  .value-props .value-prop + .value-prop {
+    border-top: 1px solid var(--lb-paper-deep, rgba(0,0,0,0.10));
+  }
+}
+
+/* ============================================================
+   Mobile typography & spacing tweaks
+   ============================================================ */
+@media (max-width: 768px) {
+  .photo { min-height: 240px; }
+}
+
+

@@ -1,0 +1,373 @@
+/* ============================================================
+   Lumber Bros. — Colors & Type
+   Foundational tokens. Import this on every page.
+   ============================================================ */
+
+/* ---------- Web fonts ---------- */
+@font-face {
+  font-family: "Bookseller CP";
+  src: url("fonts/BooksellerCp-RegularBold.otf") format("opentype");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Encode Sans SemiExpanded";
+  src: url("fonts/EncodeSansSemiExpanded-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-display: swap;
+}
+
+/* ---------- Instrument Serif (--font-serif-alt) ---------- */
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("fonts/InstrumentSerif-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("fonts/InstrumentSerif-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ---------- Lobster Two (--font-script) ---------- */
+@font-face {
+  font-family: "Lobster Two";
+  src: url("fonts/LobsterTwo-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lobster Two";
+  src: url("fonts/LobsterTwo-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lobster Two";
+  src: url("fonts/LobsterTwo-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Lobster Two";
+  src: url("fonts/LobsterTwo-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* ============================================================
+     COLOR — Brand
+     ============================================================ */
+
+  /* Primary: navy from the wordmark. Confident, trustworthy, "old ledger" */
+  --lb-navy:        #1E2B7C;
+  --lb-navy-700:    #182463;
+  --lb-navy-900:    #0E163E;
+  --lb-navy-300:    #6E7AB8;
+
+  /* Off-white: the default surface. Cooler, cleaner than cream. */
+  --lb-paper:       #EFEDE6;   /* off-white, primary canvas */
+  --lb-paper-deep:  #E1DFD7;   /* deeper neutral — section breaks */
+  --lb-paper-light: #F5F3EC;   /* lighter off-white, inner cards */
+  --lb-bone:        #F9F8F3;   /* near-white surface */
+
+  /* Subtle green — promoted to the core brand palette. Quiet, rooted. */
+  --lb-sage:        #5E7048;   /* primary supporting green */
+  --lb-sage-700:    #455234;
+  --lb-sage-300:    #8B9A75;
+  --lb-sage-100:    #D0D6C4;   /* soft tint, for backgrounds */
+
+  /* Ink: near-black, cool charcoal. Body text. */
+  --lb-ink:         #15171A;
+  --lb-ink-soft:    #353A3F;
+  --lb-ink-muted:   #5F656C;
+  --lb-ink-faint:   #8B9097;
+
+  /* True black — reserved for the site footer (the anchor at the bottom
+     of every page). Keeps the footer visually distinct from `bg-ink` /
+     `bg-navy` sections above it. Design system rule: footers use bg-black. */
+  --lb-black:       #000000;
+
+  /* Rust / saw-blade accent — work-truck energy, CTAs and highlights */
+  --lb-rust:        #C24D1C;
+  --lb-rust-700:    #9A3D14;
+  --lb-rust-300:    #E68B5F;
+
+  /* Deep forest — for rare emphasis / success states only */
+  --lb-forest:      #2E4A2B;
+  --lb-forest-700:  #1F341D;
+  --lb-moss:        var(--lb-sage-300);
+
+  /* Sawdust — golden warm secondary, used sparingly */
+  --lb-sawdust:     #D9A24A;
+
+  /* Pure */
+  --lb-white:       #FFFFFF;
+  --lb-black:       #000000;
+
+  /* ============================================================
+     COLOR — Semantic
+     ============================================================ */
+
+  --bg:             var(--lb-paper);
+  --bg-deep:        var(--lb-paper-deep);
+  --bg-elevated:    var(--lb-bone);
+  --bg-inverse:     var(--lb-navy);
+
+  --fg:             var(--lb-ink);
+  --fg-soft:        var(--lb-ink-soft);
+  --fg-muted:       var(--lb-ink-muted);
+  --fg-faint:       var(--lb-ink-faint);
+  --fg-inverse:     var(--lb-bone);
+
+  --accent:         var(--lb-rust);
+  --accent-hover:   var(--lb-rust-700);
+  --link:           var(--lb-navy);
+  --link-hover:     var(--lb-rust);
+
+  --border:         #D4D1C6;        /* hairline on off-white */
+  --border-strong:  #9DA098;
+  --border-ink:     var(--lb-ink);
+
+  --success:        var(--lb-sage-700);
+  --warning:        var(--lb-sawdust);
+  --danger:         #B8351F;
+
+  /* ============================================================
+     TYPE — Families
+     ============================================================ */
+
+  --font-display:    "Bookseller CP", "Bookmania", "Bodoni Moda", Georgia, serif;
+  --font-sans:       "Encode Sans SemiExpanded", "Encode Sans", "Helvetica Neue", system-ui, sans-serif;
+  --font-serif-alt:  "Instrument Serif", "Bodoni Moda", Georgia, serif;
+  --font-script:     "Lobster Two", "Brush Script MT", cursive;
+  --font-mono:       "IBM Plex Mono", ui-monospace, "Menlo", monospace;
+
+  /* ============================================================
+     TYPE — Scale (display = Bookseller; body = Encode Sans)
+     Display sizes are intentionally LARGE — confident wordmark energy
+     ============================================================ */
+
+  --fs-display-2xl: clamp(64px, 9vw, 132px);   /* hero display */
+  --fs-display-xl:  clamp(48px, 6vw, 88px);
+  --fs-display-lg:  clamp(36px, 4.5vw, 64px);
+  --fs-display-md:  clamp(28px, 3.5vw, 44px);
+  --fs-display-sm:  clamp(22px, 2.6vw, 32px);
+
+  --fs-h1:          clamp(36px, 4.5vw, 60px);
+  --fs-h2:          clamp(28px, 3vw, 40px);
+  --fs-h3:          22px;
+  --fs-h4:          18px;
+
+  --fs-body-lg:     19px;
+  --fs-body:        16px;
+  --fs-body-sm:     14px;
+  --fs-caption:     12px;
+  --fs-overline:    11px;
+
+  --lh-display:     1.02;
+  --lh-heading:     1.15;
+  --lh-body:        1.55;
+  --lh-tight:       1.2;
+
+  --ls-display:     -0.01em;
+  --ls-overline:    0.16em;
+  --ls-eyebrow:     0.22em;
+
+  /* ============================================================
+     SPACING (4-base scale)
+     ============================================================ */
+  --sp-0:   0;
+  --sp-1:   4px;
+  --sp-2:   8px;
+  --sp-3:   12px;
+  --sp-4:   16px;
+  --sp-5:   20px;
+  --sp-6:   24px;
+  --sp-8:   32px;
+  --sp-10:  40px;
+  --sp-12:  48px;
+  --sp-16:  64px;
+  --sp-20:  80px;
+  --sp-24:  96px;
+  --sp-32:  128px;
+
+  /* ============================================================
+     RADII — Lumber Bros uses HARD CORNERS by default.
+     Pills for chips/buttons. 2-4px for cards. NEVER 16px+ blobs.
+     ============================================================ */
+  --r-none:   0px;
+  --r-xs:     2px;
+  --r-sm:     4px;     /* default card radius */
+  --r-md:     6px;
+  --r-pill:   999px;   /* chips, eyebrows */
+
+  /* ============================================================
+     SHADOWS — minimal. Letterpress, not material-design.
+     ============================================================ */
+  --shadow-hairline: 0 0 0 1px var(--border);
+  --shadow-press:    0 1px 0 0 var(--lb-ink);                       /* hard 1px drop, like print */
+  --shadow-card:     0 2px 0 0 rgba(26, 22, 16, 0.12), 0 0 0 1px var(--border);
+  --shadow-lift:     0 8px 24px -8px rgba(26, 22, 16, 0.25), 0 0 0 1px var(--border);
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast:   120ms;
+  --t-med:    220ms;
+  --t-slow:   400ms;
+
+  /* Layout */
+  --container:        1240px;
+  --container-narrow: 880px;
+  --gutter:           clamp(20px, 4vw, 56px);
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES
+   ============================================================ */
+
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  font-weight: 700;
+  color: var(--fg);
+}
+
+h2, .h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  font-weight: 700;
+}
+
+h3, .h3 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-heading);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+h4, .h4 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  line-height: var(--lh-heading);
+  font-weight: 700;
+}
+
+/* ----------------------------------------------------------------
+   Section eyebrow — small, rust-colored, UPPERCASE heading that
+   labels a section (e.g. "Our Capabilities", "Reviews", "FAQ").
+   Apply to the section's <h2>; the uppercase + tracking distinguishes
+   it from full display headings, which stay sentence case.
+   ---------------------------------------------------------------- */
+.section-eyebrow {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lb-rust);
+  line-height: 1.1;
+  margin: 0;
+}
+.section-eyebrow :is(em, span, strong, small, a, i, b) {
+  text-transform: uppercase;
+}
+
+p { margin: 0 0 1em; }
+
+.overline {
+  font-family: var(--font-sans);
+  font-size: var(--fs-overline);
+  font-weight: 600;
+  letter-spacing: var(--ls-overline);
+  text-transform: uppercase;
+}
+
+.display-xl { font-family: var(--font-display); font-size: var(--fs-display-xl); line-height: var(--lh-display); letter-spacing: var(--ls-display); font-weight: 700; }
+.display-lg { font-family: var(--font-display); font-size: var(--fs-display-lg); line-height: var(--lh-display); letter-spacing: var(--ls-display); font-weight: 700; }
+.display-md { font-family: var(--font-display); font-size: var(--fs-display-md); line-height: var(--lh-display); letter-spacing: var(--ls-display); font-weight: 700; }
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition: color var(--t-fast) var(--ease-out);
+}
+a:hover { color: var(--link-hover); }

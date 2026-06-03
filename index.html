@@ -4,264 +4,43 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lumber Bros. — Making more with the rarest material in the galaxy.</title>
-  <meta name="description" content="Family-run tree service, sawmill, and custom-build shop serving Eastern North Carolina. Tree removal, milling, and custom timber builds across Beaufort, Pitt, and Washington counties.">
-  <meta property="og:title" content="Lumber Bros.">
-  <meta property="og:description" content="Family-run tree service, sawmill, and custom-build shop serving Eastern North Carolina.">
-  <meta property="og:type" content="website">
-  <link rel="canonical" href="https://lumberbros.co/">
-  <link rel="preload" href="fonts/BooksellerCp-RegularBold.otf" as="font" type="font/otf" crossorigin>
-  <link rel="preload" href="fonts/EncodeSansSemiExpanded-Regular.ttf" as="font" type="font/truetype" crossorigin>
-  <link rel="preload" href="fonts/EncodeSansSemiExpanded-Bold.ttf" as="font" type="font/truetype" crossorigin>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .home-hero       { padding-top: 40px; padding-bottom: 16px; }
-    .home-hero-title { font-size: clamp(56px,8.2vw,124px); line-height: 0.95; color: var(--lb-navy); margin: 0 0 40px; max-width: 14ch; }
-    .home-hero-title em { font-style: italic; color: var(--lb-rust); }
-    .home-hero-body  { padding-bottom: 56px; max-width: 720px; }
-    .home-hero-body > p { font-family: var(--font-sans); font-size: 19px; line-height: 1.55; color: var(--fg-soft); margin: 0; }
-    .home-hero-body strong { color: var(--lb-ink); font-weight: 700; }
-    .home-hero-cta   { margin-top: 32px; }
-    .services-header { margin-bottom: 80px; }
-    .services-title  { font-size: clamp(44px,5.4vw,76px); color: var(--lb-navy); margin: 0; max-width: 14ch; }
-    .service-line    { padding-bottom: 96px; }
-    .service-text    { display: flex; flex-direction: column; gap: 20px; }
-    .service-title   { font-size: clamp(28px,5.4vw,56px); color: var(--lb-navy); margin: 0; line-height: 1.0; }
-    .service-body    { font-family: var(--font-sans); font-size: 18px; color: var(--fg-soft); line-height: 1.55; margin: 0; max-width: 44ch; }
-    .service-cta     { margin-top: 6px; }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@600&display=swap">
+  <link rel="stylesheet" href="site.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Lumber Bros.",
-    "description": "Family-run tree service, sawmill, and custom-build shop serving Eastern North Carolina.",
-    "telephone": "+12524950720",
-    "email": "hello@lumberbros.co",
-    "address": { "@type": "PostalAddress", "addressLocality": "Washington", "addressRegion": "NC", "addressCountry": "US" },
-    "areaServed": [
-      { "@type": "County", "name": "Beaufort County" },
-      { "@type": "County", "name": "Pitt County" },
-      { "@type": "County", "name": "Washington County" }
-    ],
-    "openingHoursSpecification": { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "07:00", "closes": "18:00" },
-    "url": "https://lumberbros.co"
-  }
-  </script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
-<body>
+<body data-screen-label="Homepage">
+  <div id="root"></div>
 
-<!-- HEADER -->
-<header class="site-header" id="site-header">
-  <div class="container header-inner">
-    <a href="/" class="header-logo-link" aria-label="Lumber Bros. — home">
-      <img src="assets/logo.svg" alt="Lumber Bros." width="150">
-    </a>
-    <nav class="nav-desktop" aria-label="Main">
-      <a href="tree-removal.html">Tree Service</a>
-      <a href="#about">About</a>
-    </nav>
-    <div class="header-actions">
-      <a href="tel:2524950720" class="btn btn-cream header-phone-desktop">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.81 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        (252) 495-0720
-      </a>
-      <a href="tel:2524950720" aria-label="Call (252) 495-0720" class="header-phone-mobile">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.81 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      </a>
-      <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary">
-        Get a free quote
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-      </a>
-      <button type="button" class="nav-mobile-toggle" id="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
-        <span id="menu-icon-open" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span>
-        <span id="menu-icon-close" aria-hidden="true" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-      </button>
-    </div>
-  </div>
-</header>
-
-<!-- MOBILE DRAWER -->
-<div class="mobile-overlay" id="mobile-overlay" aria-hidden="true" role="presentation">
-  <div class="mobile-drawer" role="dialog" aria-modal="true" aria-label="Site menu" id="mobile-drawer">
-    <div class="drawer-top">
-      <img src="assets/logo.svg" alt="Lumber Bros." width="130">
-      <button type="button" class="drawer-close" aria-label="Close menu" id="drawer-close-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <nav class="drawer-nav" aria-label="Mobile navigation">
-      <a href="tree-removal.html">Tree Service <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
-      <a href="#about" id="drawer-about-link">About <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
-    </nav>
-    <div class="drawer-bottom">
-      <a href="tel:2524950720" class="btn btn-cream"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.89 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.81 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 5.61 5.61l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(252) 495-0720</a>
-      <a href="https://forms.example.com/lumberbros-quote" class="btn btn-primary">Get a free quote <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
-      <div class="drawer-hours">Mon–Sat, 7:00a–6:00p</div>
-    </div>
-  </div>
-</div>
-
-<main>
-
-  <!-- HERO -->
-  <section class="home-hero" aria-labelledby="hero-heading">
-    <div class="container">
-      <h1 class="display home-hero-title" id="hero-heading">
-        Doing more with the galaxy's <em>rarest material</em>
-      </h1>
-      <div class="home-hero-body">
-        <p>Scan the entire galaxy and you won't find another oak, another pine, another cypress. Wood only exists on earth. <strong>Our team doesn't waste any of it.</strong></p>
-        <div class="home-hero-cta">
-          <a href="#services" class="btn btn-cream">Learn more <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></a>
-        </div>
+  <script type="text/babel" src="components/Shared.jsx"></script>
+  <script type="text/babel" src="components/Homepage.jsx"></script>
+  <script type="text/babel">
+    const App = () => (
+      <div>
+        <SiteHeader active="home" />
+        <main>
+          <HomeHero />
+          <HomeServices />
+          <HomeFinalCTA />
+        </main>
+        <SiteFooter />
       </div>
-    </div>
-  </section>
+    );
 
-  <!-- SERVICES -->
-  <section class="section bg-paper-deep" id="services" aria-labelledby="services-heading">
-    <div class="container">
-      <div class="services-header">
-        <h2 class="display services-title" id="services-heading">What we do</h2>
-      </div>
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
 
-      <!-- Precision tree service -->
-      <article class="row-2-split service-line" aria-label="Precision tree service">
-        <div class="service-text">
-          <h3 class="display service-title">Precision tree service</h3>
-          <p class="service-body">Residential tree removal, pruning, and lot clearing across Beaufort, Pitt, and Washington counties. We specialize in tight-space removals using time-tested rigging techniques and modern ingenuity.</p>
-          <ul class="trust-signals trust-signals-check" role="list">
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"/></svg></span><span class="trust-signal-label">ISA Best Practices</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"/></svg></span><span class="trust-signal-label">Fully Insured</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-check" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8.5 6.5 12 13 4.5"/></svg></span><span class="trust-signal-label">Locally Owned &amp; Operated</span></li>
-          </ul>
-          <div class="service-cta"><a href="tree-removal.html" class="btn btn-text">View this service <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div>
-        </div>
-        <div>
-          <div class="photo-carousel" role="region" aria-roledescription="carousel" aria-label="Precision tree service photos" tabindex="0">
-            <div class="carousel-viewport"><div class="carousel-track">
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="1 of 3"><div class="photo photo-forest photo-service"><span class="tag">Photo 01 of 03</span><div class="desc">Climber 40ft up a leaning loblolly, ropes loaded, ground crew below.</div></div></div>
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true"><div class="photo photo-forest photo-service"><span class="tag">Photo 02 of 03</span><div class="desc">Crane-less rigging on a tight backyard removal, side-yard access only.</div></div></div>
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true"><div class="photo photo-forest photo-service"><span class="tag">Photo 03 of 03</span><div class="desc">Crew packed up at end of day, lawn clean, no rut from the truck.</div></div></div>
-            </div></div>
-            <div class="carousel-controls">
-              <div class="carousel-dots"><button class="carousel-dot active" aria-label="Go to photo 1" aria-current="true"></button><button class="carousel-dot" aria-label="Go to photo 2"></button><button class="carousel-dot" aria-label="Go to photo 3"></button></div>
-              <div class="carousel-arrows">
-                <button class="carousel-btn carousel-prev" type="button" aria-label="Previous photo"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
-                <button class="carousel-btn carousel-next" type="button" aria-label="Next photo"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Milling (reversed) -->
-      <article class="row-2-split-rev service-line" aria-label="Milling">
-        <div class="service-text">
-          <h3 class="display service-title">Milling</h3>
-          <p class="service-body">We mill local timber into rough-cut lumber. Farmers, contractors, woodworkers come to us for dimensions that local hardware stores don't carry.</p>
-          <ul class="trust-signals" role="list">
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Rough Cut Lumber</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Hardwood Trailer Decking</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Structural Beams</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Slabs</span></li>
-          </ul>
-          <div class="service-cta"><a href="#" class="btn btn-text">View this service <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div>
-        </div>
-        <div>
-          <div class="photo-carousel" role="region" aria-roledescription="carousel" aria-label="Milling photos" tabindex="0">
-            <div class="carousel-viewport"><div class="carousel-track">
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="1 of 3"><div class="photo photo-amber photo-service"><span class="tag">Photo 01 of 03</span><div class="desc">Bandsaw mill mid-cut on a 30-inch oak butt log, sawdust catching the light.</div></div></div>
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true"><div class="photo photo-amber photo-service"><span class="tag">Photo 02 of 03</span><div class="desc">Live-edge walnut slab fresh off the mill, drying in the stack.</div></div></div>
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true"><div class="photo photo-amber photo-service"><span class="tag">Photo 03 of 03</span><div class="desc">Stacked structural beams stickered for air-drying under the lean-to.</div></div></div>
-            </div></div>
-            <div class="carousel-controls">
-              <div class="carousel-dots"><button class="carousel-dot active" aria-label="Go to photo 1" aria-current="true"></button><button class="carousel-dot" aria-label="Go to photo 2"></button><button class="carousel-dot" aria-label="Go to photo 3"></button></div>
-              <div class="carousel-arrows">
-                <button class="carousel-btn carousel-prev" type="button" aria-label="Previous photo"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
-                <button class="carousel-btn carousel-next" type="button" aria-label="Next photo"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- Custom builds -->
-      <article class="row-2-split service-line" aria-label="Custom builds and wood products">
-        <div class="service-text">
-          <h3 class="display service-title">Custom builds &amp; wood products</h3>
-          <p class="service-body">We design and build custom timber-framed structures to spec. And when the saw stops running, nothing hits the ground wasted.</p>
-          <ul class="trust-signals" role="list">
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Mushroom Grow Bags</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Compost Sawdust</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Off-Cut Fence Posts</span></li>
-            <li class="trust-signal"><span class="trust-signal-marker trust-signal-dot" aria-hidden="true"></span><span class="trust-signal-label">Turning Blanks</span></li>
-          </ul>
-          <div class="service-cta"><a href="#" class="btn btn-text">View this service <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a></div>
-        </div>
-        <div>
-          <div class="photo-carousel" role="region" aria-roledescription="carousel" aria-label="Custom builds photos" tabindex="0">
-            <div class="carousel-viewport"><div class="carousel-track">
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="1 of 3"><div class="photo photo-shop photo-service"><span class="tag">Photo 01 of 03</span><div class="desc">Timber-frame pavilion mid-raising, scarf joints chalked, the crew at the post line.</div></div></div>
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="2 of 3" aria-hidden="true"><div class="photo photo-shop photo-service"><span class="tag">Photo 02 of 03</span><div class="desc">Bench made from a single white oak slab, octagon legs, in the shop.</div></div></div>
-              <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="3 of 3" aria-hidden="true"><div class="photo photo-shop photo-service"><span class="tag">Photo 03 of 03</span><div class="desc">Bag of turning blanks ready to ship, cut from off-cuts.</div></div></div>
-            </div></div>
-            <div class="carousel-controls">
-              <div class="carousel-dots"><button class="carousel-dot active" aria-label="Go to photo 1" aria-current="true"></button><button class="carousel-dot" aria-label="Go to photo 2"></button><button class="carousel-dot" aria-label="Go to photo 3"></button></div>
-              <div class="carousel-arrows">
-                <button class="carousel-btn carousel-prev" type="button" aria-label="Previous photo"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
-                <button class="carousel-btn carousel-next" type="button" aria-label="Next photo"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-</main>
-
-<!-- FOOTER -->
-<footer class="bg-black site-footer" aria-label="Site footer">
-  <div class="container row-4" style="gap:48px">
-    <div>
-      <img src="assets/logo.svg" alt="Lumber Bros." width="220" style="max-width:min(220px,70vw);filter:brightness(0)invert(1);display:block;height:auto;">
-      <p class="footer-tagline">Family-run tree service, sawmill, and custom-build shop. Serving Eastern North Carolina since 2024.</p>
-    </div>
-    <div>
-      <div class="footer-col-heading">Services</div>
-      <ul class="footer-links">
-        <li><a href="tree-removal.html">Tree Removal</a></li>
-        <li><a href="#">Residential Lot Clearing</a></li>
-        <li><a href="#">Milling</a></li>
-        <li><a href="#">Custom Timber Builds</a></li>
-        <li><a href="#">Wood Products</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-heading">Service areas</div>
-      <ul class="footer-links">
-        <li>Beaufort County</li><li>Pitt County</li><li>Washington County</li>
-        <li>Surrounding areas on a case-by-case basis</li>
-      </ul>
-    </div>
-    <div>
-      <div class="footer-col-heading">Contact us</div>
-      <div class="footer-contact">
-        <a href="tel:2524950720" class="footer-phone">(252) 495-0720</a>
-        <a href="mailto:hello@lumberbros.co" class="footer-email">hello@lumberbros.co</a>
-        <div class="footer-hours">Mon–Sat, 7:00a–6:00p</div>
-      </div>
-    </div>
-  </div>
-  <div class="container footer-bottom">
-    <span>© 2025 Lumber Bros. LLC · Washington, NC</span>
-    <span>ISA Professional Member CSID: 374451</span>
-  </div>
-</footer>
-
-<script src="shared.js"></script>
+    // refresh lucide after react renders
+    requestAnimationFrame(() => {
+      if (window.lucide) lucide.createIcons();
+      // run again after a tick to catch any delayed renders
+      setTimeout(() => window.lucide && lucide.createIcons(), 200);
+    });
+  </script>
 </body>
 </html>
