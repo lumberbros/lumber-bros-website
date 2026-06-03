@@ -123,7 +123,7 @@ const PhotoCarousel = ({ photos, defaultTone = "forest" }) => {
                 tone={p.tone || defaultTone}
                 className="photo-service"
                 src={p.src}
-                tag={p.caption || `Photo ${String(i + 1).padStart(2, "0")} of ${String(total).padStart(2, "0")}`}
+                tag={`Photo ${String(i + 1).padStart(2, "0")} of ${String(total).padStart(2, "0")}`}
                 desc={p.desc} />
             </div>
           ))}
@@ -255,71 +255,6 @@ const ServiceLine = ({ num, title, body, valueProps, points, marker, tone, photo
   </article>
 );
 
-const SecondaryService = ({ num, title, body, points }) => (
-  <article style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-    <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
-      <span style={{
-        fontFamily: "var(--font-sans)",
-        fontSize: 12,
-        fontWeight: 700,
-        letterSpacing: "0.14em",
-        color: "var(--lb-rust)",
-        textTransform: "uppercase",
-        lineHeight: 1,
-        paddingTop: 3,
-        opacity: 0.75,
-      }}>{num}</span>
-      <h3 className="display" style={{
-        fontSize: "clamp(22px, 2.8vw, 32px)",
-        color: "var(--lb-navy)",
-        margin: 0,
-        lineHeight: 1.05,
-      }}>
-        {title}
-      </h3>
-    </div>
-    <p style={{
-      fontFamily: "var(--font-sans)",
-      fontSize: 15,
-      color: "var(--fg-soft)",
-      lineHeight: 1.55,
-      margin: 0,
-    }}>
-      {body}
-    </p>
-    <ul style={{
-      listStyle: "none",
-      padding: 0,
-      margin: 0,
-      display: "flex",
-      flexDirection: "column",
-      gap: 4,
-    }}>
-      {points.map((p, i) => (
-        <li key={i} style={{
-          fontFamily: "var(--font-sans)",
-          fontSize: 14,
-          color: "var(--lb-ink-soft)",
-          lineHeight: 1.4,
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-        }}>
-          <span style={{
-            width: 4, height: 4,
-            borderRadius: "50%",
-            background: "var(--lb-rust)",
-            opacity: 0.6,
-            flexShrink: 0,
-            display: "inline-block",
-          }}></span>
-          {p}
-        </li>
-      ))}
-    </ul>
-  </article>
-);
-
 const HomeServices = () => (
   <section className="section bg-paper-deep" id="services">
     <div className="container">
@@ -338,7 +273,7 @@ const HomeServices = () => (
       <ServiceLine
         num="01"
         title="Precision tree service"
-        body="Tree and limb removal across Beaufort, Pitt, and Washington counties. We specialize in tight-space removals using time-tested rigging techniques and modern ingenuity."
+        body="Residential tree and limb removal across Beaufort, Pitt, and Washington counties. We specialize in tight-space removals using time-tested rigging techniques and modern ingenuity."
         points={[
           "Fully Insured",
           "Locally Owned & Operated",
@@ -348,10 +283,13 @@ const HomeServices = () => (
         marker="check"
         tone="forest"
         photos={[
-          { src: "assets/photos/arborist-climbing-tall-pine-tree-1.webp",   caption: "Alex making a climb • Washington, NC" },
-          { src: "assets/photos/chainsaw-operator-storm-debris-cleanup.webp", caption: "Storm cleanup • Greenville, NC" },
-          { src: "assets/photos/person-climbing-trees-zip-line.webp",        caption: "Alex rigging a limb • Greenville, NC" },
-          { src: "assets/photos/man-pulling-red-rope-trees.webp",            caption: "Setting up a 4:1 • Washington, NC" },
+          { desc: "Climber 40ft up a leaning loblolly, ropes loaded, ground crew below." },
+          { desc: "Crane-less rigging on a tight backyard removal, side-yard access only." },
+          { desc: "Crew packed up at end of day, lawn clean, no rut from the truck." },
+          { src: "../assets/photos/arborist-climbing-tall-pine-tree-1.webp" },
+          { src: "../assets/photos/chainsaw-operator-storm-debris-cleanup.webp" },
+          { src: "../assets/photos/person-climbing-trees-zip-line.webp" },
+          { src: "../assets/photos/man-pulling-red-rope-trees.webp" },
         ]}
         showCta
       />
@@ -363,50 +301,47 @@ const HomeServices = () => (
         points={["Rough Cut Lumber", "Trailer Decking", "Structural Beams", "Slabs", "Off-Cut Fencing", "Posts"]}
         tone="amber"
         photos={[
-          { src: "assets/photos/kohler-bandsaw-mill-lumber-slab.webp" },
-          { src: "assets/photos/lumber-stacks-farm-shed.webp" },
-          { src: "assets/photos/fresh-sawn-lumber-flatbed-trailer.webp" },
-          { src: "assets/photos/stacked-lumber-boards-deck-night-1.webp" },
+          { desc: "Bandsaw mill mid-cut on a 30-inch oak butt log, sawdust catching the light." },
+          { desc: "Live-edge walnut slab fresh off the mill, drying in the stack." },
+          { desc: "Stacked structural beams stickered for air-drying under the lean-to." },
+          { src: "../assets/photos/kohler-bandsaw-mill-lumber-slab.webp" },
+          { src: "../assets/photos/lumber-stacks-farm-shed.webp" },
+          { src: "../assets/photos/fresh-sawn-lumber-flatbed-trailer.webp" },
+          { src: "../assets/photos/stacked-lumber-boards-deck-night-1.webp" },
         ]}
         reverse
       />
 
-      {/* Secondary services — no photos, compact */}
-      <div style={{
-        borderTop: "1px solid rgba(20,18,14,0.10)",
-        paddingTop: 48,
-        paddingBottom: 24,
-        marginTop: 8,
-      }}>
-        <p style={{
-          fontFamily: "var(--font-sans)",
-          fontSize: 11,
-          fontWeight: 700,
-          letterSpacing: "0.16em",
-          textTransform: "uppercase",
-          color: "var(--fg-muted)",
-          margin: "0 0 36px",
-        }}>Also available</p>
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "40px 64px",
-        }}>
-          <SecondaryService
-            num="03"
-            title="Timber frame builds"
-            body="We design and build custom structures to spec using timber-framing techniques and our own locally sourced lumber."
-            points={["Pavilions", "Barns", "Outbuildings", "Decks", "Ramps"]}
-          />
-          <SecondaryService
-            num="04"
-            title="Wood products"
-            body="When the saw stops running, nothing hits the ground wasted. We craft small-batch wood goods from everything that's left over."
-            points={["Mushroom Grow Bags", "Compost Sawdust", "Turning Blanks"]}
-          />
-        </div>
-      </div>
+      <ServiceLine
+        num="03"
+        title="Timber frame builds"
+        body="We design and build custom structures to spec using timber-framing techniques and our own locally sourced lumber."
+        points={["Pavilions", "Barns", "Outbuildings", "Decks", "Ramps"]}
+        tone="shop"
+        photos={[
+          { desc: "Timber-frame pavilion mid-raising, scarf joints chalked, the crew at the post line." },
+          { desc: "Mortise-and-tenon shoulder being cut on a white oak post, chisel and mallet." },
+          { desc: "Finished pavilion at golden hour, standing seam roof, exposed rafters." },
+          { src: "../assets/photos/timber-frame-deck-construction-joists.webp" },
+          { src: "../assets/photos/timber-frame-pergola-construction-site-1.webp" },
+        ]}
+      />
 
+      <ServiceLine
+        num="04"
+        title="Wood products"
+        body="When the saw stops running, nothing hits the ground wasted. We craft small-batch wood goods from everything that's left over."
+        points={["Mushroom Grow Bags", "Compost Sawdust", "Turning Blanks"]}
+        tone="amber"
+        photos={[
+          { desc: "Bench made from a single white oak slab, octagon legs, in the shop." },
+          { desc: "Bag of turning blanks ready to ship, cut from off-cuts." },
+          { desc: "Mushroom grow bags packed with hardwood sawdust, stacked on the rack." },
+          { src: "../assets/photos/handmade-wooden-block-sets-granite.webp" },
+          { src: "../assets/photos/stacked-oak-lumber-boards-granite.webp" },
+        ]}
+        reverse
+      />
     </div>
   </section>
 );
