@@ -150,6 +150,29 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", () => openLB(btn.dataset.lightboxSrc, btn.dataset.lightboxTag)));
   }
 
+  /* ── Autoplay videos (iOS Safari fix) ──────────────────── */
+  /* iOS Safari ignores the `autoplay` attribute on videos inside
+     overflow:hidden containers. The only reliable fix is a
+     programmatic .play() call. We also use IntersectionObserver
+     so the video resumes if it scrolls out and back into view.  */
+  const autoplayVideos = [...document.querySelectorAll("video[autoplay]")];
+  if (autoplayVideos.length) {
+    const tryPlay = v => { if (v.paused) v.play().catch(() => {}); };
+
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) tryPlay(e.target); });
+      }, { threshold: 0.1 });
+      autoplayVideos.forEach(v => { tryPlay(v); io.observe(v); });
+    } else {
+      autoplayVideos.forEach(tryPlay);
+    }
+
+    /* Second attempt on window load covers slow-connection cases
+       where the video element isn't ready at DOMContentLoaded.  */
+    window.addEventListener("load", () => autoplayVideos.forEach(tryPlay));
+  }
+
   /* ── FAQ accordion ──────────────────────────────────────── */
   const faqs = [...document.querySelectorAll(".faq-item")];
   if (faqs.length) {
